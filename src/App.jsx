@@ -7,10 +7,12 @@ import RedoxEasyPracticePage from './pages/RedoxEasyPracticePage.jsx';
 import RedoxMediumPracticePage from './pages/RedoxMediumPracticePage.jsx';
 import RedoxHardPracticePage from './pages/RedoxHardPracticePage.jsx';
 import SelfCheckPage from './pages/SelfCheckPage.jsx';
+import KlausurTasksPage from './pages/KlausurTasksPage.jsx';
 
 const views = {
   home: HomePage,
   selfCheck: SelfCheckPage,
+  klausurTasks: KlausurTasksPage,
   redoxOverview: RedoxOverviewPage,
   redoxExplanation: RedoxExplanationPage,
   redoxPractice: RedoxEasyPracticePage,

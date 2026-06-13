@@ -42,6 +42,12 @@ export default function HomePage({ navigate }) {
           badge="Neu"
           featured
         />
+        <TileCard
+          title="Klausurähnliche Aufgaben – Grundlagen"
+          description="Aufgaben zu Oxidationszahlen, Redoxreihe, galvanischer Zelle und Zellspannung."
+          onClick={() => navigate('klausurTasks')}
+          badge="Neu"
+        />
         {modules.map((module) => (
           <TileCard
             key={module.id}

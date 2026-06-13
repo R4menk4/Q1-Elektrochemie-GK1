@@ -302,6 +302,433 @@ button:disabled {
   accent-color: var(--primary);
 }
 
+.klausur-task-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0 0 22px;
+}
+
+.klausur-task-nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 42px;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: #ffffff;
+  color: var(--primary-dark);
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.klausur-overview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 310px), 1fr));
+  gap: 18px;
+}
+
+.klausur-overview-card {
+  display: grid;
+  gap: 12px;
+  align-content: start;
+  min-height: 260px;
+  width: 100%;
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  text-align: left;
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.klausur-overview-card:hover {
+  transform: translateY(-2px);
+  border-color: #8db9a4;
+}
+
+.klausur-card__number {
+  color: var(--accent);
+  font-size: 0.9rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.klausur-card__title {
+  color: #102219;
+  font-size: 1.2rem;
+  font-weight: 900;
+  line-height: 1.2;
+}
+
+.klausur-card__description {
+  color: var(--muted);
+  font-size: 0.98rem;
+}
+
+.klausur-card__operators {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.afb-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 4px 9px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #f5f7f5;
+  color: #33443a;
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.afb-chip--II {
+  border-color: #b6cdbf;
+  background: #e8f2ec;
+  color: #234837;
+}
+
+.afb-chip--III {
+  border-color: #9bb9c5;
+  background: #e2f0f4;
+  color: #1f4b5b;
+}
+
+.klausur-card__action {
+  align-self: end;
+  justify-self: start;
+  margin-top: 4px;
+  color: var(--primary-dark);
+  font-weight: 900;
+}
+
+.klausur-page {
+  display: grid;
+  gap: 24px;
+}
+
+.klausur-task,
+.klausur-subtask,
+.klausur-material,
+.criteria-check {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.klausur-task {
+  padding: 24px;
+  box-shadow: var(--shadow);
+}
+
+.klausur-context {
+  color: var(--muted);
+}
+
+.klausur-image {
+  display: block;
+  width: min(100%, 560px);
+  max-height: 280px;
+  object-fit: contain;
+  margin: 18px 0;
+  border-radius: var(--radius);
+}
+
+.klausur-material {
+  margin: 18px 0;
+  padding: 18px;
+  background: #f7fbf8;
+  box-shadow: none;
+}
+
+.klausur-material ul {
+  margin: 0;
+  padding-left: 22px;
+}
+
+.klausur-table-wrap {
+  overflow-x: auto;
+}
+
+.klausur-material table {
+  width: 100%;
+  min-width: 560px;
+  border-collapse: collapse;
+}
+
+.klausur-material th,
+.klausur-material td {
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+
+.klausur-material th {
+  background: #e7f2ec;
+}
+
+.klausur-subtask {
+  margin-top: 18px;
+  padding: 20px;
+  box-shadow: none;
+}
+
+.klausur-instruction {
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.klausur-textarea {
+  min-height: 140px;
+  width: 100%;
+  resize: vertical;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 14px;
+  background: #ffffff;
+  color: var(--text);
+}
+
+.chemical-equation {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin: 18px 0;
+  padding: 16px;
+  border: 1px solid #c5d6ce;
+  border-radius: var(--radius);
+  background: #fbfdfb;
+  color: #102219;
+  font-size: 1.45rem;
+  font-weight: 900;
+  line-height: 1.25;
+}
+
+.reaction-chunk,
+.oxidation-particle,
+.scaffold-particle,
+.scaffold-electron {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.fixed-operator {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--primary-dark);
+}
+
+.chemical-coefficient {
+  align-self: center;
+  padding-right: 2px;
+}
+
+.oxidation-element {
+  display: inline-grid;
+  grid-template-rows: 34px 34px;
+  justify-items: center;
+  align-items: center;
+  min-width: 42px;
+}
+
+.oxidation-symbol-row {
+  display: inline-flex;
+  align-items: baseline;
+  min-height: 34px;
+}
+
+.oxidation-symbol-row sub {
+  font-size: 0.68em;
+  line-height: 0;
+  transform: translateY(0.28em);
+}
+
+.oxidation-input,
+.scaffold-input {
+  min-height: 34px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #ffffff;
+  color: var(--text);
+  font-weight: 900;
+  text-align: center;
+}
+
+.oxidation-input {
+  width: 42px;
+}
+
+.scaffold-equations {
+  display: grid;
+  gap: 14px;
+}
+
+.scaffold-equation {
+  padding: 14px;
+  border: 1px solid #d7e4dc;
+  border-radius: var(--radius);
+  background: #fbfdfb;
+}
+
+.scaffold-equation h4 {
+  margin: 0 0 10px;
+  color: var(--accent);
+}
+
+.scaffold-formula {
+  display: inline-flex;
+  align-items: end;
+  gap: 2px;
+}
+
+.scaffold-formula-entry {
+  display: inline-grid;
+  grid-template-columns: 52px 38px;
+  grid-template-rows: 34px 34px 34px;
+  align-items: center;
+  justify-items: center;
+}
+
+.scaffold-input--coefficient {
+  width: 42px;
+}
+
+.scaffold-input--element {
+  grid-column: 1;
+  grid-row: 2;
+  width: 52px;
+}
+
+.scaffold-input--index {
+  grid-column: 2;
+  grid-row: 3;
+  width: 34px;
+  align-self: start;
+  font-size: 0.9rem;
+}
+
+.scaffold-input--charge {
+  grid-column: 2;
+  grid-row: 1;
+  width: 38px;
+  align-self: end;
+  font-size: 0.9rem;
+}
+
+.scaffold-electron .chemical-symbol {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+}
+
+.scaffold-electron .scaffold-input--charge {
+  grid-column: auto;
+  grid-row: auto;
+  align-self: flex-start;
+  width: 34px;
+  margin-left: -2px;
+}
+
+.direct-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.klausur-field {
+  display: grid;
+  gap: 8px;
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.klausur-field input {
+  min-height: 48px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  background: #ffffff;
+  color: var(--text);
+}
+
+.klausur-choice-group {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.klausur-choice-group legend {
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.klausur-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+}
+
+.klausur-option input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--primary);
+}
+
+.is-correct {
+  border-color: #69b987 !important;
+  background: #e4f5ea !important;
+}
+
+.is-wrong {
+  border-color: #d87979 !important;
+  background: #fde8e8 !important;
+}
+
+.criteria-check {
+  margin-top: 14px;
+  padding: 16px;
+  background: #fbfdfb;
+}
+
+.criteria-check ul {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.criteria-check li {
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+
+.klausur-button-row {
+  margin-top: 16px;
+}
+
 .formula {
   color: #102219;
   font-family:
@@ -707,6 +1134,24 @@ button:disabled {
     display: grid;
   }
 
+  .klausur-task {
+    padding: 18px;
+  }
+
+  .klausur-subtask {
+    padding: 16px;
+  }
+
+  .chemical-equation {
+    gap: 10px;
+    padding: 12px;
+    font-size: 1.2rem;
+  }
+
+  .scaffold-formula-entry {
+    grid-template-columns: 48px 34px;
+  }
+
   .formula--block {
     font-size: 1.16rem;
   }
@@ -738,5 +1183,18 @@ button:disabled {
   .self-check-category {
     break-inside: avoid;
     box-shadow: none;
+  }
+
+  .klausur-task,
+  .klausur-subtask,
+  .klausur-material,
+  .criteria-check {
+    break-inside: avoid;
+    box-shadow: none;
+  }
+
+  .klausur-task-nav,
+  .klausur-button-row {
+    display: none !important;
   }
 }

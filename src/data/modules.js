@@ -15,6 +15,14 @@ export const modules = [
     href: `${import.meta.env.BASE_URL}Simulationen/Galvanische_Zelle/index.html`,
   },
   {
+    id: 'electrode-potentials',
+    title: 'Elektrodenpotenziale',
+    description:
+      'Verstehe, wie Elektrodenpotenziale entstehen, warum man die Standardwasserstoffelektrode braucht und wie Zellspannungen berechnet werden.',
+    status: 'active',
+    target: 'electrodePotentials',
+  },
+  {
     id: 'elektrolyse',
     title: 'Elektrolyse',
     description: 'Kommt spaeter',

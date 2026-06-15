@@ -1552,6 +1552,7 @@ const klausurTaskMeta = {
   const modules = [
     { id: 'redox', title: 'Redoxreaktionen aufstellen', description: 'Oxidation, Reduktion, Elektronenanzahl und Gesamtreaktion üben.', status: 'active', target: 'redoxOverview' },
     { id: 'galvanische-zellen', title: 'Galvanische Zelle – Daniell-Element Simulation', description: 'Erkunde den Elektronenfluss, die Oxidation an der Zink-Elektrode, die Reduktion an der Kupfer-Elektrode und den Ladungsausgleich durch die Ionenbrücke.', status: 'active', href: window.location.protocol === 'file:' ? './public/Simulationen/Galvanische_Zelle/index.html' : './Simulationen/Galvanische_Zelle/index.html' },
+    { id: 'electrode-potentials', title: 'Elektrodenpotenziale', description: 'Verstehe, wie Elektrodenpotenziale entstehen, warum man die Standardwasserstoffelektrode braucht und wie Zellspannungen berechnet werden.', status: 'active', target: 'electrodePotentials' },
     { id: 'elektrolyse', title: 'Elektrolyse', description: 'Kommt später', status: 'coming-soon' },
     { id: 'spannungsreihe', title: 'Spannungsreihe', description: 'Kommt später', status: 'coming-soon' },
     { id: 'korrosion', title: 'Korrosion', description: 'Kommt später', status: 'coming-soon' },
@@ -1565,7 +1566,2709 @@ const klausurTaskMeta = {
     { category: 'Elektrodenpotenziale', items: ['Ich kann erklären, was ein Elektrodenpotenzial ist.', 'Ich kann Standardelektrodenpotenziale aus einer Tabelle nutzen.', 'Ich kann mithilfe von Elektrodenpotenzialen Donator- und Akzeptorhalbzelle bestimmen.', 'Ich kann die Zellspannung einer galvanischen Zelle berechnen.', 'Ich kann mithilfe der Zellspannung beurteilen, ob eine Redoxreaktion freiwillig abläuft.'] },
   ];
 
-  const state = { view: 'home', notice: '', selectedTaskId: null, inputs: {}, directResults: {}, criteriaVisible: {}, criteriaResults: {}, solutions: {} };
+  const electrodePotentialData = {
+  "meta": {
+    "id": "electrode-potentials",
+    "title": "Elektrodenpotenziale",
+    "subtitle": "Verstehe, wie Elektrodenpotenziale entstehen, warum man die Standardwasserstoffelektrode braucht und wie Zellspannungen berechnet werden.",
+    "overviewButtonLabel": "Zurück zur Übersicht",
+    "modulePath": "electrode-potentials"
+  },
+  "overviewCards": [
+    {
+      "id": "electrode-potential-intro",
+      "title": "Elektrodenpotenziale und Zellspannungen",
+      "shortTitle": "Grundlagen",
+      "description": "Lerne, was ein Elektrodenpotenzial aussagt, wie Anode und Kathode bestimmt werden und wie man Zellspannungen berechnet.",
+      "icon": "⚡",
+      "targetView": "electrodePotentialIntro",
+      "operators": [
+        {
+          "name": "beschreiben",
+          "afb": "I"
+        },
+        {
+          "name": "erklären",
+          "afb": "II"
+        },
+        {
+          "name": "berechnen",
+          "afb": "II"
+        }
+      ]
+    },
+    {
+      "id": "standard-hydrogen-electrode",
+      "title": "Standardwasserstoffelektrode",
+      "shortTitle": "SHE",
+      "description": "Verstehe, warum man eine Bezugselektrode braucht und warum das Standardpotenzial der Wasserstoffelektrode auf 0,00 V festgelegt ist.",
+      "icon": "H₂",
+      "targetView": "standardHydrogenElectrode",
+      "operators": [
+        {
+          "name": "beschreiben",
+          "afb": "I"
+        },
+        {
+          "name": "erklären",
+          "afb": "II"
+        },
+        {
+          "name": "deuten",
+          "afb": "II"
+        }
+      ]
+    },
+    {
+      "id": "electrode-potential-practice-overview",
+      "title": "Übungen",
+      "shortTitle": "Üben",
+      "description": "Übe gezielt Begriffe, Halbzellen, Zellspannungen, Gesamtreaktionen und die Beurteilung freiwilliger Redoxreaktionen.",
+      "icon": "✓",
+      "targetView": "electrodePotentialPracticeOverview",
+      "operators": [
+        {
+          "name": "zuordnen",
+          "afb": "I"
+        },
+        {
+          "name": "berechnen",
+          "afb": "II"
+        },
+        {
+          "name": "beurteilen",
+          "afb": "III"
+        }
+      ]
+    }
+  ],
+  "introPage": {
+    "id": "electrode-potential-intro",
+    "title": "Elektrodenpotenziale und Zellspannungen",
+    "subtitle": "Elektrodenpotenziale helfen dabei vorherzusagen, welche Halbzelle Elektronen aufnimmt und wie groß die Spannung einer galvanischen Zelle ist.",
+    "sections": [
+      {
+        "id": "what-is-potential",
+        "title": "Was ist ein Elektrodenpotenzial?",
+        "content": [
+          "Ein Elektrodenpotenzial beschreibt die Neigung eines Redoxpaares zur Elektronenaufnahme.",
+          "Je positiver das Standardelektrodenpotenzial ist, desto eher wird die oxidierte Form reduziert.",
+          "Je negativer das Standardelektrodenpotenzial ist, desto eher gibt die reduzierte Form Elektronen ab."
+        ],
+        "keyIdea": "Ein Elektrodenpotenzial beschreibt keine einzelne sichtbare Spannung, sondern eine Reduktionsneigung im Vergleich zu einer Bezugselektrode."
+      },
+      {
+        "id": "why-two-half-cells",
+        "title": "Warum braucht man zwei Halbzellen?",
+        "content": [
+          "Eine Spannung kann man nur als Potenzialdifferenz zwischen zwei Elektroden messen.",
+          "Deshalb besteht eine galvanische Zelle immer aus zwei Halbzellen.",
+          "Die Halbzelle mit dem höheren Elektrodenpotenzial wirkt als Kathode. Dort findet die Reduktion statt.",
+          "Die Halbzelle mit dem niedrigeren Elektrodenpotenzial wirkt als Anode. Dort findet die Oxidation statt."
+        ],
+        "keyIdea": "Höheres Potenzial: Kathode und Reduktion. Niedrigeres Potenzial: Anode und Oxidation."
+      },
+      {
+        "id": "cell-voltage",
+        "title": "Wie berechnet man die Zellspannung?",
+        "content": [
+          "Die Zellspannung ergibt sich aus der Differenz der Elektrodenpotenziale.",
+          "Dabei wird das Potenzial der Anode vom Potenzial der Kathode abgezogen.",
+          "Ist die Zellspannung positiv, kann die Reaktion freiwillig als galvanische Zelle ablaufen."
+        ],
+        "formula": "U = E(Kathode) − E(Anode)",
+        "example": {
+          "title": "Beispiel Daniell-Element",
+          "given": [
+            "Zn²⁺/Zn: −0,76 V",
+            "Cu²⁺/Cu: +0,34 V"
+          ],
+          "solution": [
+            "Kathode: Cu²⁺/Cu, weil +0,34 V höher ist.",
+            "Anode: Zn²⁺/Zn, weil −0,76 V niedriger ist.",
+            "U = 0,34 V − (−0,76 V) = 1,10 V."
+          ]
+        }
+      }
+    ],
+    "interactiveElement": {
+      "type": "halfCellSelector",
+      "title": "Halbzellen vergleichen",
+      "instruction": "Wähle zwei Halbzellen aus. Das Programm bestimmt automatisch Anode, Kathode, Elektronenflussrichtung und Zellspannung.",
+      "potentials": [
+        {
+          "id": "mg",
+          "redoxPair": "Mg²⁺/Mg",
+          "oxidizedForm": "Mg²⁺",
+          "reducedForm": "Mg",
+          "metal": "Magnesium",
+          "symbol": "Mg",
+          "potential": -2.37
+        },
+        {
+          "id": "zn",
+          "redoxPair": "Zn²⁺/Zn",
+          "oxidizedForm": "Zn²⁺",
+          "reducedForm": "Zn",
+          "metal": "Zink",
+          "symbol": "Zn",
+          "potential": -0.76
+        },
+        {
+          "id": "fe",
+          "redoxPair": "Fe²⁺/Fe",
+          "oxidizedForm": "Fe²⁺",
+          "reducedForm": "Fe",
+          "metal": "Eisen",
+          "symbol": "Fe",
+          "potential": -0.44
+        },
+        {
+          "id": "h2",
+          "redoxPair": "2 H⁺/H₂",
+          "oxidizedForm": "H⁺",
+          "reducedForm": "H₂",
+          "metal": "Standardwasserstoffelektrode",
+          "symbol": "H₂",
+          "potential": 0
+        },
+        {
+          "id": "cu",
+          "redoxPair": "Cu²⁺/Cu",
+          "oxidizedForm": "Cu²⁺",
+          "reducedForm": "Cu",
+          "metal": "Kupfer",
+          "symbol": "Cu",
+          "potential": 0.34
+        },
+        {
+          "id": "ag",
+          "redoxPair": "Ag⁺/Ag",
+          "oxidizedForm": "Ag⁺",
+          "reducedForm": "Ag",
+          "metal": "Silber",
+          "symbol": "Ag",
+          "potential": 0.8
+        }
+      ],
+      "defaultSelection": {
+        "halfCellA": "zn",
+        "halfCellB": "cu"
+      },
+      "resultRules": {
+        "cathode": "higherPotential",
+        "anode": "lowerPotential",
+        "voltageFormula": "U = E(Kathode) − E(Anode)",
+        "electronFlow": "fromAnodeToCathode"
+      }
+    }
+  },
+  "shePage": {
+    "id": "standard-hydrogen-electrode",
+    "title": "Standardwasserstoffelektrode",
+    "subtitle": "Die Standardwasserstoffelektrode ist die Bezugselektrode für Standardelektrodenpotenziale.",
+    "sections": [
+      {
+        "id": "problem",
+        "title": "Das Problem",
+        "content": [
+          "Ein einzelnes Elektrodenpotenzial kann nicht direkt gemessen werden.",
+          "Messbar ist immer nur eine Spannung zwischen zwei Elektroden.",
+          "Damit man Elektrodenpotenziale vergleichen kann, braucht man eine festgelegte Bezugselektrode."
+        ]
+      },
+      {
+        "id": "solution",
+        "title": "Die Lösung: eine Bezugselektrode",
+        "content": [
+          "Als Bezugselektrode nutzt man die Standardwasserstoffelektrode.",
+          "Ihr Standardelektrodenpotenzial wurde per Definition auf 0,00 V festgelegt.",
+          "Alle anderen Standardelektrodenpotenziale werden im Vergleich zu dieser Elektrode angegeben."
+        ]
+      },
+      {
+        "id": "setup",
+        "title": "Aufbau der Standardwasserstoffelektrode",
+        "content": [
+          "Eine Platinelektrode taucht in eine saure Lösung.",
+          "Wasserstoffgas H₂ wird an der Platinelektrode vorbeigeleitet.",
+          "In der Lösung befinden sich Wasserstoff-Ionen H⁺ bzw. Oxonium-Ionen H₃O⁺.",
+          "Die Platinelektrode dient als leitende Oberfläche, weil Wasserstoff selbst kein Metall ist."
+        ],
+        "labels": [
+          "Platinelektrode",
+          "Wasserstoffgas H₂",
+          "saure Lösung mit H⁺/H₃O⁺",
+          "Standardpotenzial E° = 0,00 V"
+        ]
+      },
+      {
+        "id": "half-reaction",
+        "title": "Halbreaktion",
+        "content": [
+          "Die Standardwasserstoffelektrode kann je nach Partnerhalbzelle als Anode oder Kathode wirken.",
+          "Die zugehörige Halbreaktion ist umkehrbar."
+        ],
+        "formula": "2 H⁺ + 2 e⁻ ⇌ H₂"
+      },
+      {
+        "id": "meaning",
+        "title": "Bedeutung",
+        "content": [
+          "Wird eine Metallhalbzelle gegen die Standardwasserstoffelektrode gemessen, erhält man ihr Standardelektrodenpotenzial.",
+          "Ein negatives Standardpotenzial bedeutet: Die Metallhalbzelle gibt im Vergleich zur Wasserstoffelektrode leichter Elektronen ab.",
+          "Ein positives Standardpotenzial bedeutet: Die oxidierte Form der Metallhalbzelle nimmt im Vergleich zu H⁺ leichter Elektronen auf."
+        ]
+      }
+    ],
+    "simulation": {
+      "type": "standardHydrogenElectrodeSimulation",
+      "title": "Simulation: Metallhalbzelle gegen Standardwasserstoffelektrode",
+      "instruction": "Wähle eine Metallhalbzelle aus und beobachte, welche Elektrode Anode bzw. Kathode ist.",
+      "referenceElectrode": {
+        "id": "h2",
+        "title": "Standardwasserstoffelektrode",
+        "potential": 0,
+        "halfReaction": "2 H⁺ + 2 e⁻ ⇌ H₂",
+        "labels": [
+          "Pt",
+          "H₂",
+          "H⁺/H₃O⁺",
+          "E° = 0,00 V"
+        ]
+      },
+      "selectableHalfCells": [
+        {
+          "id": "zn",
+          "title": "Zink-Halbzelle",
+          "redoxPair": "Zn²⁺/Zn",
+          "potential": -0.76,
+          "explanation": [
+            "Zink besitzt ein negativeres Standardelektrodenpotenzial als die Wasserstoffelektrode.",
+            "Zink wird oxidiert.",
+            "Elektronen fließen von der Zinkelektrode zur Standardwasserstoffelektrode.",
+            "Daraus folgt: E°(Zn²⁺/Zn) = −0,76 V."
+          ],
+          "oxidation": "Zn → Zn²⁺ + 2 e⁻",
+          "reduction": "2 H⁺ + 2 e⁻ → H₂"
+        },
+        {
+          "id": "cu",
+          "title": "Kupfer-Halbzelle",
+          "redoxPair": "Cu²⁺/Cu",
+          "potential": 0.34,
+          "explanation": [
+            "Kupfer besitzt ein positiveres Standardelektrodenpotenzial als die Wasserstoffelektrode.",
+            "Kupfer-Ionen werden reduziert.",
+            "Elektronen fließen von der Standardwasserstoffelektrode zur Kupferhalbzelle.",
+            "Daraus folgt: E°(Cu²⁺/Cu) = +0,34 V."
+          ],
+          "oxidation": "H₂ → 2 H⁺ + 2 e⁻",
+          "reduction": "Cu²⁺ + 2 e⁻ → Cu"
+        },
+        {
+          "id": "ag",
+          "title": "Silber-Halbzelle",
+          "redoxPair": "Ag⁺/Ag",
+          "potential": 0.8,
+          "explanation": [
+            "Silber besitzt ein deutlich positiveres Standardelektrodenpotenzial als die Wasserstoffelektrode.",
+            "Silber-Ionen werden reduziert.",
+            "Elektronen fließen von der Standardwasserstoffelektrode zur Silberhalbzelle.",
+            "Daraus folgt: E°(Ag⁺/Ag) = +0,80 V."
+          ],
+          "oxidation": "H₂ → 2 H⁺ + 2 e⁻",
+          "reduction": "2 Ag⁺ + 2 e⁻ → 2 Ag"
+        }
+      ],
+      "visualElements": {
+        "showGasBubbles": true,
+        "showElectronFlow": true,
+        "showIonMovement": true,
+        "showVoltmeter": true,
+        "showHalfReactions": true
+      }
+    }
+  },
+  "practiceOverview": {
+    "id": "electrode-potential-practice-overview",
+    "title": "Übungen zu Elektrodenpotenzialen und Zellspannungen",
+    "subtitle": "Wähle gezielt aus, was du üben möchtest: Begriffe, Halbzellen, Zellspannungen, Reaktionsgleichungen oder Freiwilligkeit.",
+    "cards": [
+      {
+        "id": "practice-terms",
+        "title": "Übung 1: Begriffe zuordnen",
+        "description": "Ordne zentrale Begriffe wie Anode, Kathode, Oxidation, Reduktion und Elektronenfluss richtig zu.",
+        "operators": [
+          {
+            "name": "zuordnen",
+            "afb": "I"
+          },
+          {
+            "name": "erklären",
+            "afb": "II"
+          }
+        ],
+        "targetExerciseId": "practice-terms"
+      },
+      {
+        "id": "practice-half-cells",
+        "title": "Übung 2: Halbzellen auswählen",
+        "description": "Bestimme mithilfe einer Potenzialtabelle, welche Halbzelle als Kathode und welche als Anode wirkt.",
+        "operators": [
+          {
+            "name": "bestimmen",
+            "afb": "I"
+          },
+          {
+            "name": "begründen",
+            "afb": "II"
+          }
+        ],
+        "targetExerciseId": "practice-half-cells"
+      },
+      {
+        "id": "practice-cell-voltage",
+        "title": "Übung 3: Zellspannung berechnen",
+        "description": "Berechne Zellspannungen aus Standardelektrodenpotenzialen und überprüfe deinen Rechenweg.",
+        "operators": [
+          {
+            "name": "berechnen",
+            "afb": "II"
+          },
+          {
+            "name": "erläutern",
+            "afb": "II"
+          }
+        ],
+        "targetExerciseId": "practice-cell-voltage"
+      },
+      {
+        "id": "practice-overall-reaction",
+        "title": "Übung 4: Gesamtreaktion formulieren",
+        "description": "Formuliere Oxidation, Reduktion und Gesamtreaktion mit beschreibbaren Reaktionsgleichungs-Kästchen.",
+        "operators": [
+          {
+            "name": "formulieren",
+            "afb": "II"
+          },
+          {
+            "name": "aufstellen",
+            "afb": "II"
+          }
+        ],
+        "targetExerciseId": "practice-overall-reaction"
+      },
+      {
+        "id": "practice-spontaneity",
+        "title": "Übung 5: Freiwilligkeit beurteilen",
+        "description": "Entscheide mithilfe der Zellspannung, ob eine Redoxreaktion freiwillig abläuft.",
+        "operators": [
+          {
+            "name": "berechnen",
+            "afb": "II"
+          },
+          {
+            "name": "beurteilen",
+            "afb": "III"
+          }
+        ],
+        "targetExerciseId": "practice-spontaneity"
+      }
+    ]
+  },
+  "practiceExercises": [
+    {
+      "id": "practice-terms",
+      "title": "Übung 1: Begriffe zuordnen",
+      "shortTitle": "Begriffe",
+      "description": "Ordne zentrale Begriffe rund um Elektrodenpotenziale, Anode, Kathode und Elektronenfluss zu.",
+      "type": "matchingExercise",
+      "checking": {
+        "type": "direct",
+        "feedback": "color"
+      },
+      "materials": [
+        {
+          "title": "Merksatz",
+          "type": "text",
+          "content": "In einer freiwillig ablaufenden galvanischen Zelle findet an der Anode die Oxidation und an der Kathode die Reduktion statt. Elektronen fließen außen von der Anode zur Kathode."
+        }
+      ],
+      "tasks": [
+        {
+          "id": "terms-a",
+          "title": "Aufgabe A: Grundbegriffe",
+          "prompt": "Ordne die Grundbegriffe richtig zu.",
+          "pairs": [
+            {
+              "left": "Anode",
+              "correctRight": "Ort der Oxidation"
+            },
+            {
+              "left": "Kathode",
+              "correctRight": "Ort der Reduktion"
+            },
+            {
+              "left": "Oxidation",
+              "correctRight": "Elektronenabgabe"
+            },
+            {
+              "left": "Reduktion",
+              "correctRight": "Elektronenaufnahme"
+            }
+          ],
+          "rightOptions": [
+            "Ort der Oxidation",
+            "Ort der Reduktion",
+            "Elektronenabgabe",
+            "Elektronenaufnahme"
+          ]
+        },
+        {
+          "id": "terms-b",
+          "title": "Aufgabe B: Elektrodenpotenziale",
+          "prompt": "Ordne die Aussagen zu Elektrodenpotenzialen richtig zu.",
+          "pairs": [
+            {
+              "left": "höheres Elektrodenpotenzial",
+              "correctRight": "Kathode"
+            },
+            {
+              "left": "niedrigeres Elektrodenpotenzial",
+              "correctRight": "Anode"
+            },
+            {
+              "left": "positiveres Standardpotenzial",
+              "correctRight": "stärkere Reduktionsneigung"
+            },
+            {
+              "left": "negativeres Standardpotenzial",
+              "correctRight": "stärkere Bereitschaft zur Elektronenabgabe"
+            }
+          ],
+          "rightOptions": [
+            "Kathode",
+            "Anode",
+            "stärkere Reduktionsneigung",
+            "stärkere Bereitschaft zur Elektronenabgabe"
+          ]
+        },
+        {
+          "id": "terms-c",
+          "title": "Aufgabe C: Stromkreis der galvanischen Zelle",
+          "prompt": "Ordne die Bestandteile und Flussrichtungen richtig zu.",
+          "pairs": [
+            {
+              "left": "Elektronenfluss außen",
+              "correctRight": "von der Anode zur Kathode"
+            },
+            {
+              "left": "Ionenfluss innen",
+              "correctRight": "über Salzbrücke oder Diaphragma"
+            },
+            {
+              "left": "Salzbrücke",
+              "correctRight": "ermöglicht den Ladungsausgleich"
+            },
+            {
+              "left": "Voltmeter",
+              "correctRight": "misst die Zellspannung"
+            }
+          ],
+          "rightOptions": [
+            "von der Anode zur Kathode",
+            "über Salzbrücke oder Diaphragma",
+            "ermöglicht den Ladungsausgleich",
+            "misst die Zellspannung"
+          ]
+        }
+      ],
+      "modelAnswer": "Anode: Ort der Oxidation. Kathode: Ort der Reduktion. Oxidation: Elektronenabgabe. Reduktion: Elektronenaufnahme. Die Halbzelle mit dem höheren Elektrodenpotenzial ist die Kathode, die mit dem niedrigeren Elektrodenpotenzial die Anode. Elektronen fließen außen von der Anode zur Kathode."
+    },
+    {
+      "id": "practice-half-cells",
+      "title": "Übung 2: Halbzellen auswählen",
+      "shortTitle": "Halbzellen",
+      "description": "Bestimme Anode und Kathode anhand von Standardelektrodenpotenzialen.",
+      "type": "halfCellChoiceExercise",
+      "checking": {
+        "type": "direct",
+        "feedback": "color"
+      },
+      "materials": [
+        {
+          "title": "Material 1: Standardelektrodenpotenziale",
+          "type": "table",
+          "columns": [
+            "Redoxpaar",
+            "E° in V"
+          ],
+          "rows": [
+            [
+              "Mg²⁺/Mg",
+              "−2,37"
+            ],
+            [
+              "Zn²⁺/Zn",
+              "−0,76"
+            ],
+            [
+              "Fe²⁺/Fe",
+              "−0,44"
+            ],
+            [
+              "Cu²⁺/Cu",
+              "+0,34"
+            ],
+            [
+              "Ag⁺/Ag",
+              "+0,80"
+            ]
+          ]
+        }
+      ],
+      "tasks": [
+        {
+          "id": "half-cells-a",
+          "title": "Aufgabe A: Zink/Kupfer",
+          "prompt": "Gegeben sind die Halbzellen Zn²⁺/Zn und Cu²⁺/Cu. Bestimme Anode und Kathode.",
+          "fields": [
+            {
+              "id": "anode",
+              "label": "Anode",
+              "correctValues": [
+                "Zn²⁺/Zn",
+                "Zn/Zn²⁺",
+                "Zink",
+                "Zn"
+              ]
+            },
+            {
+              "id": "kathode",
+              "label": "Kathode",
+              "correctValues": [
+                "Cu²⁺/Cu",
+                "Cu/Cu²⁺",
+                "Kupfer",
+                "Cu"
+              ]
+            },
+            {
+              "id": "reason",
+              "label": "Begründung",
+              "correctValues": [
+                "Cu hat das höhere Potenzial",
+                "Cu²⁺/Cu hat das höhere Potenzial",
+                "Kupfer hat das höhere Potenzial",
+                "Zink hat das niedrigere Potenzial",
+                "Zn²⁺/Zn hat das niedrigere Potenzial"
+              ]
+            }
+          ],
+          "modelAnswer": "Anode: Zn²⁺/Zn. Kathode: Cu²⁺/Cu. Kupfer besitzt das höhere Elektrodenpotenzial und wird daher reduziert."
+        },
+        {
+          "id": "half-cells-b",
+          "title": "Aufgabe B: Kupfer/Silber",
+          "prompt": "Gegeben sind die Halbzellen Cu²⁺/Cu und Ag⁺/Ag. Bestimme Anode und Kathode.",
+          "fields": [
+            {
+              "id": "anode",
+              "label": "Anode",
+              "correctValues": [
+                "Cu²⁺/Cu",
+                "Cu/Cu²⁺",
+                "Kupfer",
+                "Cu"
+              ]
+            },
+            {
+              "id": "kathode",
+              "label": "Kathode",
+              "correctValues": [
+                "Ag⁺/Ag",
+                "Ag/Ag⁺",
+                "Silber",
+                "Ag"
+              ]
+            },
+            {
+              "id": "reason",
+              "label": "Begründung",
+              "correctValues": [
+                "Ag hat das höhere Potenzial",
+                "Ag⁺/Ag hat das höhere Potenzial",
+                "Silber hat das höhere Potenzial",
+                "Kupfer hat das niedrigere Potenzial",
+                "Cu²⁺/Cu hat das niedrigere Potenzial"
+              ]
+            }
+          ],
+          "modelAnswer": "Anode: Cu²⁺/Cu. Kathode: Ag⁺/Ag. Silber besitzt das höhere Elektrodenpotenzial und wird daher reduziert."
+        },
+        {
+          "id": "half-cells-c",
+          "title": "Aufgabe C: Eisen/Kupfer",
+          "prompt": "Gegeben sind die Halbzellen Fe²⁺/Fe und Cu²⁺/Cu. Bestimme Anode und Kathode.",
+          "fields": [
+            {
+              "id": "anode",
+              "label": "Anode",
+              "correctValues": [
+                "Fe²⁺/Fe",
+                "Fe/Fe²⁺",
+                "Eisen",
+                "Fe"
+              ]
+            },
+            {
+              "id": "kathode",
+              "label": "Kathode",
+              "correctValues": [
+                "Cu²⁺/Cu",
+                "Cu/Cu²⁺",
+                "Kupfer",
+                "Cu"
+              ]
+            },
+            {
+              "id": "reason",
+              "label": "Begründung",
+              "correctValues": [
+                "Cu hat das höhere Potenzial",
+                "Cu²⁺/Cu hat das höhere Potenzial",
+                "Kupfer hat das höhere Potenzial",
+                "Eisen hat das niedrigere Potenzial",
+                "Fe²⁺/Fe hat das niedrigere Potenzial"
+              ]
+            }
+          ],
+          "modelAnswer": "Anode: Fe²⁺/Fe. Kathode: Cu²⁺/Cu. Kupfer besitzt das höhere Elektrodenpotenzial."
+        },
+        {
+          "id": "half-cells-d",
+          "title": "Aufgabe D: Magnesium/Zink",
+          "prompt": "Gegeben sind die Halbzellen Mg²⁺/Mg und Zn²⁺/Zn. Bestimme Anode und Kathode.",
+          "fields": [
+            {
+              "id": "anode",
+              "label": "Anode",
+              "correctValues": [
+                "Mg²⁺/Mg",
+                "Mg/Mg²⁺",
+                "Magnesium",
+                "Mg"
+              ]
+            },
+            {
+              "id": "kathode",
+              "label": "Kathode",
+              "correctValues": [
+                "Zn²⁺/Zn",
+                "Zn/Zn²⁺",
+                "Zink",
+                "Zn"
+              ]
+            },
+            {
+              "id": "reason",
+              "label": "Begründung",
+              "correctValues": [
+                "Zn hat das höhere Potenzial",
+                "Zn²⁺/Zn hat das höhere Potenzial",
+                "Zink hat das höhere Potenzial",
+                "Magnesium hat das niedrigere Potenzial",
+                "Mg²⁺/Mg hat das niedrigere Potenzial"
+              ]
+            }
+          ],
+          "modelAnswer": "Anode: Mg²⁺/Mg. Kathode: Zn²⁺/Zn. Zink besitzt im Vergleich zu Magnesium das höhere Elektrodenpotenzial."
+        },
+        {
+          "id": "half-cells-e",
+          "title": "Aufgabe E: Magnesium/Silber",
+          "prompt": "Gegeben sind die Halbzellen Mg²⁺/Mg und Ag⁺/Ag. Bestimme Anode und Kathode.",
+          "fields": [
+            {
+              "id": "anode",
+              "label": "Anode",
+              "correctValues": [
+                "Mg²⁺/Mg",
+                "Mg/Mg²⁺",
+                "Magnesium",
+                "Mg"
+              ]
+            },
+            {
+              "id": "kathode",
+              "label": "Kathode",
+              "correctValues": [
+                "Ag⁺/Ag",
+                "Ag/Ag⁺",
+                "Silber",
+                "Ag"
+              ]
+            },
+            {
+              "id": "reason",
+              "label": "Begründung",
+              "correctValues": [
+                "Ag hat das höhere Potenzial",
+                "Ag⁺/Ag hat das höhere Potenzial",
+                "Silber hat das höhere Potenzial",
+                "Magnesium hat das niedrigere Potenzial",
+                "Mg²⁺/Mg hat das niedrigere Potenzial"
+              ]
+            }
+          ],
+          "modelAnswer": "Anode: Mg²⁺/Mg. Kathode: Ag⁺/Ag. Silber besitzt das höhere Elektrodenpotenzial, Magnesium das niedrigere."
+        }
+      ],
+      "modelAnswer": "Die Halbzelle mit dem höheren Standardelektrodenpotenzial ist die Kathode. Die Halbzelle mit dem niedrigeren Standardelektrodenpotenzial ist die Anode."
+    },
+    {
+      "id": "practice-cell-voltage",
+      "title": "Übung 3: Zellspannung berechnen",
+      "shortTitle": "Zellspannung",
+      "description": "Berechne die Zellspannung galvanischer Zellen mithilfe von Standardelektrodenpotenzialen.",
+      "type": "calculationExercise",
+      "checking": {
+        "type": "direct",
+        "feedback": "color"
+      },
+      "formula": "U = E(Kathode) − E(Anode)",
+      "materials": [
+        {
+          "title": "Material 1: Standardelektrodenpotenziale",
+          "type": "table",
+          "columns": [
+            "Redoxpaar",
+            "E° in V"
+          ],
+          "rows": [
+            [
+              "Mg²⁺/Mg",
+              "−2,37"
+            ],
+            [
+              "Zn²⁺/Zn",
+              "−0,76"
+            ],
+            [
+              "Fe²⁺/Fe",
+              "−0,44"
+            ],
+            [
+              "Cu²⁺/Cu",
+              "+0,34"
+            ],
+            [
+              "Ag⁺/Ag",
+              "+0,80"
+            ]
+          ]
+        }
+      ],
+      "tasks": [
+        {
+          "id": "voltage-a",
+          "title": "Aufgabe A: Zink/Kupfer",
+          "prompt": "Berechne die Zellspannung der galvanischen Zelle Zn/Zn²⁺ || Cu²⁺/Cu.",
+          "fields": [
+            {
+              "id": "eKathode",
+              "label": "E(Kathode) in V",
+              "correctValue": 0.34
+            },
+            {
+              "id": "eAnode",
+              "label": "E(Anode) in V",
+              "correctValue": -0.76
+            },
+            {
+              "id": "voltage",
+              "label": "U in V",
+              "correctValue": 1.1
+            }
+          ],
+          "tolerance": 0.01,
+          "modelAnswer": "U = 0,34 V − (−0,76 V) = 1,10 V."
+        },
+        {
+          "id": "voltage-b",
+          "title": "Aufgabe B: Magnesium/Silber",
+          "prompt": "Berechne die Zellspannung der galvanischen Zelle Mg/Mg²⁺ || Ag⁺/Ag.",
+          "fields": [
+            {
+              "id": "eKathode",
+              "label": "E(Kathode) in V",
+              "correctValue": 0.8
+            },
+            {
+              "id": "eAnode",
+              "label": "E(Anode) in V",
+              "correctValue": -2.37
+            },
+            {
+              "id": "voltage",
+              "label": "U in V",
+              "correctValue": 3.17
+            }
+          ],
+          "tolerance": 0.01,
+          "modelAnswer": "U = 0,80 V − (−2,37 V) = 3,17 V."
+        },
+        {
+          "id": "voltage-c",
+          "title": "Aufgabe C: Eisen/Kupfer",
+          "prompt": "Berechne die Zellspannung der galvanischen Zelle Fe/Fe²⁺ || Cu²⁺/Cu.",
+          "fields": [
+            {
+              "id": "eKathode",
+              "label": "E(Kathode) in V",
+              "correctValue": 0.34
+            },
+            {
+              "id": "eAnode",
+              "label": "E(Anode) in V",
+              "correctValue": -0.44
+            },
+            {
+              "id": "voltage",
+              "label": "U in V",
+              "correctValue": 0.78
+            }
+          ],
+          "tolerance": 0.01,
+          "modelAnswer": "U = 0,34 V − (−0,44 V) = 0,78 V."
+        },
+        {
+          "id": "voltage-d",
+          "title": "Aufgabe D: Zink/Silber",
+          "prompt": "Berechne die Zellspannung der galvanischen Zelle Zn/Zn²⁺ || Ag⁺/Ag.",
+          "fields": [
+            {
+              "id": "eKathode",
+              "label": "E(Kathode) in V",
+              "correctValue": 0.8
+            },
+            {
+              "id": "eAnode",
+              "label": "E(Anode) in V",
+              "correctValue": -0.76
+            },
+            {
+              "id": "voltage",
+              "label": "U in V",
+              "correctValue": 1.56
+            }
+          ],
+          "tolerance": 0.01,
+          "modelAnswer": "U = 0,80 V − (−0,76 V) = 1,56 V."
+        },
+        {
+          "id": "voltage-e",
+          "title": "Aufgabe E: Magnesium/Kupfer",
+          "prompt": "Berechne die Zellspannung der galvanischen Zelle Mg/Mg²⁺ || Cu²⁺/Cu.",
+          "fields": [
+            {
+              "id": "eKathode",
+              "label": "E(Kathode) in V",
+              "correctValue": 0.34
+            },
+            {
+              "id": "eAnode",
+              "label": "E(Anode) in V",
+              "correctValue": -2.37
+            },
+            {
+              "id": "voltage",
+              "label": "U in V",
+              "correctValue": 2.71
+            }
+          ],
+          "tolerance": 0.01,
+          "modelAnswer": "U = 0,34 V − (−2,37 V) = 2,71 V."
+        }
+      ]
+    },
+    {
+      "id": "practice-overall-reaction",
+      "title": "Übung 4: Gesamtreaktion formulieren",
+      "shortTitle": "Gesamtreaktion",
+      "description": "Formuliere Oxidation, Reduktion und Gesamtreaktion mit Reaktionsgleichungs-Kästchen.",
+      "type": "redoxEquationScaffold",
+      "checking": {
+        "type": "direct",
+        "feedback": "color"
+      },
+      "materials": [
+        {
+          "title": "Hinweis",
+          "type": "text-list",
+          "content": [
+            "Die Halbzelle mit dem niedrigeren Elektrodenpotenzial ist die Anode. Dort findet die Oxidation statt.",
+            "Die Halbzelle mit dem höheren Elektrodenpotenzial ist die Kathode. Dort findet die Reduktion statt.",
+            "Plus-Zeichen und Reaktionspfeile sind vorgegeben."
+          ]
+        }
+      ],
+      "tasks": [
+        {
+          "id": "reaction-a",
+          "title": "Aufgabe A: Zn/Cu-Zelle",
+          "prompt": "Formuliere die Oxidation, die Reduktion und die Gesamtreaktion für die Zn/Cu-Zelle.",
+          "materials": [
+            {
+              "title": "Material",
+              "type": "text-list",
+              "content": [
+                "Zink-Halbzelle: Zn²⁺/Zn, E° = −0,76 V",
+                "Kupfer-Halbzelle: Cu²⁺/Cu, E° = +0,34 V"
+              ]
+            }
+          ],
+          "scaffold": {
+            "instruction": "Fülle die Kästchen für Koeffizienten, Elementsymbole, Indizes, Ladungen und Elektronen aus.",
+            "equations": [
+              {
+                "label": "Oxidation",
+                "expectedDisplay": "Zn → Zn²⁺ + 2 e⁻",
+                "parts": [
+                  {
+                    "type": "particle",
+                    "coefficient": {
+                      "correct": "",
+                      "accepted": [
+                        "",
+                        "1"
+                      ]
+                    },
+                    "formula": [
+                      {
+                        "element": {
+                          "correct": "Zn",
+                          "accepted": [
+                            "Zn",
+                            "zn"
+                          ]
+                        },
+                        "index": {
+                          "correct": "",
+                          "accepted": [
+                            "",
+                            "1"
+                          ]
+                        },
+                        "charge": {
+                          "correct": "",
+                          "accepted": [
+                            "",
+                            "0"
+                          ]
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "arrow"
+                  },
+                  {
+                    "type": "particle",
+                    "coefficient": {
+                      "correct": "",
+                      "accepted": [
+                        "",
+                        "1"
+                      ]
+                    },
+                    "formula": [
+                      {
+                        "element": {
+                          "correct": "Zn",
+                          "accepted": [
+                            "Zn",
+                            "zn"
+                          ]
+                        },
+                        "index": {
+                          "correct": "",
+                          "accepted": [
+                            "",
+                            "1"
+                          ]
+                        },
+                        "charge": {
+                          "correct": "2+",
+                          "accepted": [
+                            "2+",
+                            "+2",
+                            "²⁺"
+                          ]
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "plus"
+                  },
+                  {
+                    "type": "electron",
+                    "coefficient": {
+                      "correct": "2",
+                      "accepted": [
+                        "2"
+                      ]
+                    },
+                    "symbol": "e",
+                    "charge": {
+                      "correct": "-",
+                      "accepted": [
+                        "-",
+                        "−",
+                        "⁻"
+                      ]
+                    }
+                  }
+                ]
+              },
+              {
+                "label": "Reduktion",
+                "expectedDisplay": "Cu²⁺ + 2 e⁻ → Cu",
+                "parts": [
+                  {
+                    "type": "particle",
+                    "coefficient": {
+                      "correct": "",
+                      "accepted": [
+                        "",
+                        "1"
+                      ]
+                    },
+                    "formula": [
+                      {
+                        "element": {
+                          "correct": "Cu",
+                          "accepted": [
+                            "Cu",
+                            "cu"
+                          ]
+                        },
+                        "index": {
+                          "correct": "",
+                          "accepted": [
+                            "",
+                            "1"
+                          ]
+                        },
+                        "charge": {
+                          "correct": "2+",
+                          "accepted": [
+                            "2+",
+                            "+2",
+                            "²⁺"
+                          ]
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "plus"
+                  },
+                  {
+                    "type": "electron",
+                    "coefficient": {
+                      "correct": "2",
+                      "accepted": [
+                        "2"
+                      ]
+                    },
+                    "symbol": "e",
+                    "charge": {
+                      "correct": "-",
+                      "accepted": [
+                        "-",
+                        "−",
+                        "⁻"
+                      ]
+                    }
+                  },
+                  {
+                    "type": "arrow"
+                  },
+                  {
+                    "type": "particle",
+                    "coefficient": {
+                      "correct": "",
+                      "accepted": [
+                        "",
+                        "1"
+                      ]
+                    },
+                    "formula": [
+                      {
+                        "element": {
+                          "correct": "Cu",
+                          "accepted": [
+                            "Cu",
+                            "cu"
+                          ]
+                        },
+                        "index": {
+                          "correct": "",
+                          "accepted": [
+                            "",
+                            "1"
+                          ]
+                        },
+                        "charge": {
+                          "correct": "",
+                          "accepted": [
+                            "",
+                            "0"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "label": "Gesamtgleichung",
+                "expectedDisplay": "Zn + Cu²⁺ → Zn²⁺ + Cu",
+                "parts": [
+                  {
+                    "type": "particle",
+                    "coefficient": {
+                      "correct": "",
+                      "accepted": [
+                        "",
+                        "1"
+                      ]
+                    },
+                    "formula": [
+                      {
+                        "element": {
+                          "correct": "Zn",
+                          "accepted": [
+                            "Zn",
+                            "zn"
+                          ]
+                        },
+                        "index": {
+                          "correct": "",
+                          "accepted": [
+                            "",
+                            "1"
+                          ]
+                        },
+                        "charge": {
+                          "correct": "",
+                          "accepted": [
+                            "",
+                            "0"
+                          ]
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "plus"
+                  },
+                  {
+                    "type": "particle",
+                    "coefficient": {
+                      "correct": "",
+                      "accepted": [
+                        "",
+                        "1"
+                      ]
+                    },
+                    "formula": [
+                      {
+                        "element": {
+                          "correct": "Cu",
+                          "accepted": [
+                            "Cu",
+                            "cu"
+                          ]
+                        },
+                        "index": {
+                          "correct": "",
+                          "accepted": [
+                            "",
+                            "1"
+                          ]
+                        },
+                        "charge": {
+                          "correct": "2+",
+                          "accepted": [
+                            "2+",
+                            "+2",
+                            "²⁺"
+                          ]
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "arrow"
+                  },
+                  {
+                    "type": "particle",
+                    "coefficient": {
+                      "correct": "",
+                      "accepted": [
+                        "",
+                        "1"
+                      ]
+                    },
+                    "formula": [
+                      {
+                        "element": {
+                          "correct": "Zn",
+                          "accepted": [
+                            "Zn",
+                            "zn"
+                          ]
+                        },
+                        "index": {
+                          "correct": "",
+                          "accepted": [
+                            "",
+                            "1"
+                          ]
+                        },
+                        "charge": {
+                          "correct": "2+",
+                          "accepted": [
+                            "2+",
+                            "+2",
+                            "²⁺"
+                          ]
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "plus"
+                  },
+                  {
+                    "type": "particle",
+                    "coefficient": {
+                      "correct": "",
+                      "accepted": [
+                        "",
+                        "1"
+                      ]
+                    },
+                    "formula": [
+                      {
+                        "element": {
+                          "correct": "Cu",
+                          "accepted": [
+                            "Cu",
+                            "cu"
+                          ]
+                        },
+                        "index": {
+                          "correct": "",
+                          "accepted": [
+                            "",
+                            "1"
+                          ]
+                        },
+                        "charge": {
+                          "correct": "",
+                          "accepted": [
+                            "",
+                            "0"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "modelAnswer": "Oxidation: Zn → Zn²⁺ + 2 e⁻. Reduktion: Cu²⁺ + 2 e⁻ → Cu. Gesamtreaktion: Zn + Cu²⁺ → Zn²⁺ + Cu."
+        },
+        {
+          "id": "reaction-b",
+          "title": "Aufgabe B: Fe/Cu-Zelle",
+          "prompt": "Formuliere die Oxidation, die Reduktion und die Gesamtreaktion für die Fe/Cu-Zelle.",
+          "materials": [
+            {
+              "title": "Material",
+              "type": "text-list",
+              "content": [
+                "Eisen-Halbzelle: Fe²⁺/Fe, E° = −0,44 V",
+                "Kupfer-Halbzelle: Cu²⁺/Cu, E° = +0,34 V"
+              ]
+            }
+          ],
+          "scaffold": {
+            "instruction": "Fülle die Kästchen für Koeffizienten, Elementsymbole, Indizes, Ladungen und Elektronen aus.",
+            "equations": [
+              {
+                "label": "Oxidation",
+                "expectedDisplay": "Fe → Fe²⁺ + 2 e⁻",
+                "parts": [
+                  {
+                    "type": "particle",
+                    "coefficient": {
+                      "correct": "",
+                      "accepted": [
+                        "",
+                        "1"
+                      ]
+                    },
+                    "formula": [
+                      {
+                        "element": {
+                          "correct": "Fe",
+                          "accepted": [
+                            "Fe",
+                            "fe"
+                          ]
+                        },
+                        "index": {
+                          "correct": "",
+                          "accepted": [
+                            "",
+                            "1"
+                          ]
+                        },
+                        "charge": {
+                          "correct": "",
+                          "accepted": [
+                            "",
+                            "0"
+                          ]
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "arrow"
+                  },
+                  {
+                    "type": "particle",
+                    "coefficient": {
+                      "correct": "",
+                      "accepted": [
+                        "",
+                        "1"
+                      ]
+                    },
+                    "formula": [
+                      {
+                        "element": {
+                          "correct": "Fe",
+                          "accepted": [
+                            "Fe",
+                            "fe"
+                          ]
+                        },
+                        "index": {
+                          "correct": "",
+                          "accepted": [
+                            "",
+                            "1"
+                          ]
+                        },
+                        "charge": {
+                          "correct": "2+",
+                          "accepted": [
+                            "2+",
+                            "+2",
+                            "²⁺"
+                          ]
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "plus"
+                  },
+                  {
+                    "type": "electron",
+                    "coefficient": {
+                      "correct": "2",
+                      "accepted": [
+                        "2"
+                      ]
+                    },
+                    "symbol": "e",
+                    "charge": {
+                      "correct": "-",
+                      "accepted": [
+                        "-",
+                        "−",
+                        "⁻"
+                      ]
+                    }
+                  }
+                ]
+              },
+              {
+                "label": "Reduktion",
+                "expectedDisplay": "Cu²⁺ + 2 e⁻ → Cu",
+                "parts": [
+                  {
+                    "type": "particle",
+                    "coefficient": {
+                      "correct": "",
+                      "accepted": [
+                        "",
+                        "1"
+                      ]
+                    },
+                    "formula": [
+                      {
+                        "element": {
+                          "correct": "Cu",
+                          "accepted": [
+                            "Cu",
+                            "cu"
+                          ]
+                        },
+                        "index": {
+                          "correct": "",
+                          "accepted": [
+                            "",
+                            "1"
+                          ]
+                        },
+                        "charge": {
+                          "correct": "2+",
+                          "accepted": [
+                            "2+",
+                            "+2",
+                            "²⁺"
+                          ]
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "plus"
+                  },
+                  {
+                    "type": "electron",
+                    "coefficient": {
+                      "correct": "2",
+                      "accepted": [
+                        "2"
+                      ]
+                    },
+                    "symbol": "e",
+                    "charge": {
+                      "correct": "-",
+                      "accepted": [
+                        "-",
+                        "−",
+                        "⁻"
+                      ]
+                    }
+                  },
+                  {
+                    "type": "arrow"
+                  },
+                  {
+                    "type": "particle",
+                    "coefficient": {
+                      "correct": "",
+                      "accepted": [
+                        "",
+                        "1"
+                      ]
+                    },
+                    "formula": [
+                      {
+                        "element": {
+                          "correct": "Cu",
+                          "accepted": [
+                            "Cu",
+                            "cu"
+                          ]
+                        },
+                        "index": {
+                          "correct": "",
+                          "accepted": [
+                            "",
+                            "1"
+                          ]
+                        },
+                        "charge": {
+                          "correct": "",
+                          "accepted": [
+                            "",
+                            "0"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "label": "Gesamtgleichung",
+                "expectedDisplay": "Fe + Cu²⁺ → Fe²⁺ + Cu",
+                "parts": [
+                  {
+                    "type": "particle",
+                    "coefficient": {
+                      "correct": "",
+                      "accepted": [
+                        "",
+                        "1"
+                      ]
+                    },
+                    "formula": [
+                      {
+                        "element": {
+                          "correct": "Fe",
+                          "accepted": [
+                            "Fe",
+                            "fe"
+                          ]
+                        },
+                        "index": {
+                          "correct": "",
+                          "accepted": [
+                            "",
+                            "1"
+                          ]
+                        },
+                        "charge": {
+                          "correct": "",
+                          "accepted": [
+                            "",
+                            "0"
+                          ]
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "plus"
+                  },
+                  {
+                    "type": "particle",
+                    "coefficient": {
+                      "correct": "",
+                      "accepted": [
+                        "",
+                        "1"
+                      ]
+                    },
+                    "formula": [
+                      {
+                        "element": {
+                          "correct": "Cu",
+                          "accepted": [
+                            "Cu",
+                            "cu"
+                          ]
+                        },
+                        "index": {
+                          "correct": "",
+                          "accepted": [
+                            "",
+                            "1"
+                          ]
+                        },
+                        "charge": {
+                          "correct": "2+",
+                          "accepted": [
+                            "2+",
+                            "+2",
+                            "²⁺"
+                          ]
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "arrow"
+                  },
+                  {
+                    "type": "particle",
+                    "coefficient": {
+                      "correct": "",
+                      "accepted": [
+                        "",
+                        "1"
+                      ]
+                    },
+                    "formula": [
+                      {
+                        "element": {
+                          "correct": "Fe",
+                          "accepted": [
+                            "Fe",
+                            "fe"
+                          ]
+                        },
+                        "index": {
+                          "correct": "",
+                          "accepted": [
+                            "",
+                            "1"
+                          ]
+                        },
+                        "charge": {
+                          "correct": "2+",
+                          "accepted": [
+                            "2+",
+                            "+2",
+                            "²⁺"
+                          ]
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "plus"
+                  },
+                  {
+                    "type": "particle",
+                    "coefficient": {
+                      "correct": "",
+                      "accepted": [
+                        "",
+                        "1"
+                      ]
+                    },
+                    "formula": [
+                      {
+                        "element": {
+                          "correct": "Cu",
+                          "accepted": [
+                            "Cu",
+                            "cu"
+                          ]
+                        },
+                        "index": {
+                          "correct": "",
+                          "accepted": [
+                            "",
+                            "1"
+                          ]
+                        },
+                        "charge": {
+                          "correct": "",
+                          "accepted": [
+                            "",
+                            "0"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "modelAnswer": "Oxidation: Fe → Fe²⁺ + 2 e⁻. Reduktion: Cu²⁺ + 2 e⁻ → Cu. Gesamtreaktion: Fe + Cu²⁺ → Fe²⁺ + Cu."
+        },
+        {
+          "id": "reaction-c",
+          "title": "Aufgabe C: Mg/Ag-Zelle",
+          "prompt": "Formuliere die Oxidation, die Reduktion und die Gesamtreaktion für die Mg/Ag-Zelle.",
+          "materials": [
+            {
+              "title": "Material",
+              "type": "text-list",
+              "content": [
+                "Magnesium-Halbzelle: Mg²⁺/Mg, E° = −2,37 V",
+                "Silber-Halbzelle: Ag⁺/Ag, E° = +0,80 V"
+              ]
+            }
+          ],
+          "scaffold": {
+            "instruction": "Fülle die Kästchen für Koeffizienten, Elementsymbole, Indizes, Ladungen und Elektronen aus.",
+            "equations": [
+              {
+                "label": "Oxidation",
+                "expectedDisplay": "Mg → Mg²⁺ + 2 e⁻",
+                "parts": [
+                  {
+                    "type": "particle",
+                    "coefficient": {
+                      "correct": "",
+                      "accepted": [
+                        "",
+                        "1"
+                      ]
+                    },
+                    "formula": [
+                      {
+                        "element": {
+                          "correct": "Mg",
+                          "accepted": [
+                            "Mg",
+                            "mg"
+                          ]
+                        },
+                        "index": {
+                          "correct": "",
+                          "accepted": [
+                            "",
+                            "1"
+                          ]
+                        },
+                        "charge": {
+                          "correct": "",
+                          "accepted": [
+                            "",
+                            "0"
+                          ]
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "arrow"
+                  },
+                  {
+                    "type": "particle",
+                    "coefficient": {
+                      "correct": "",
+                      "accepted": [
+                        "",
+                        "1"
+                      ]
+                    },
+                    "formula": [
+                      {
+                        "element": {
+                          "correct": "Mg",
+                          "accepted": [
+                            "Mg",
+                            "mg"
+                          ]
+                        },
+                        "index": {
+                          "correct": "",
+                          "accepted": [
+                            "",
+                            "1"
+                          ]
+                        },
+                        "charge": {
+                          "correct": "2+",
+                          "accepted": [
+                            "2+",
+                            "+2",
+                            "²⁺"
+                          ]
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "plus"
+                  },
+                  {
+                    "type": "electron",
+                    "coefficient": {
+                      "correct": "2",
+                      "accepted": [
+                        "2"
+                      ]
+                    },
+                    "symbol": "e",
+                    "charge": {
+                      "correct": "-",
+                      "accepted": [
+                        "-",
+                        "−",
+                        "⁻"
+                      ]
+                    }
+                  }
+                ]
+              },
+              {
+                "label": "Reduktion",
+                "expectedDisplay": "2 Ag⁺ + 2 e⁻ → 2 Ag",
+                "parts": [
+                  {
+                    "type": "particle",
+                    "coefficient": {
+                      "correct": "2",
+                      "accepted": [
+                        "2"
+                      ]
+                    },
+                    "formula": [
+                      {
+                        "element": {
+                          "correct": "Ag",
+                          "accepted": [
+                            "Ag",
+                            "ag"
+                          ]
+                        },
+                        "index": {
+                          "correct": "",
+                          "accepted": [
+                            "",
+                            "1"
+                          ]
+                        },
+                        "charge": {
+                          "correct": "+",
+                          "accepted": [
+                            "+",
+                            "1+",
+                            "+1",
+                            "⁺"
+                          ]
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "plus"
+                  },
+                  {
+                    "type": "electron",
+                    "coefficient": {
+                      "correct": "2",
+                      "accepted": [
+                        "2"
+                      ]
+                    },
+                    "symbol": "e",
+                    "charge": {
+                      "correct": "-",
+                      "accepted": [
+                        "-",
+                        "−",
+                        "⁻"
+                      ]
+                    }
+                  },
+                  {
+                    "type": "arrow"
+                  },
+                  {
+                    "type": "particle",
+                    "coefficient": {
+                      "correct": "2",
+                      "accepted": [
+                        "2"
+                      ]
+                    },
+                    "formula": [
+                      {
+                        "element": {
+                          "correct": "Ag",
+                          "accepted": [
+                            "Ag",
+                            "ag"
+                          ]
+                        },
+                        "index": {
+                          "correct": "",
+                          "accepted": [
+                            "",
+                            "1"
+                          ]
+                        },
+                        "charge": {
+                          "correct": "",
+                          "accepted": [
+                            "",
+                            "0"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "label": "Gesamtgleichung",
+                "expectedDisplay": "Mg + 2 Ag⁺ → Mg²⁺ + 2 Ag",
+                "parts": [
+                  {
+                    "type": "particle",
+                    "coefficient": {
+                      "correct": "",
+                      "accepted": [
+                        "",
+                        "1"
+                      ]
+                    },
+                    "formula": [
+                      {
+                        "element": {
+                          "correct": "Mg",
+                          "accepted": [
+                            "Mg",
+                            "mg"
+                          ]
+                        },
+                        "index": {
+                          "correct": "",
+                          "accepted": [
+                            "",
+                            "1"
+                          ]
+                        },
+                        "charge": {
+                          "correct": "",
+                          "accepted": [
+                            "",
+                            "0"
+                          ]
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "plus"
+                  },
+                  {
+                    "type": "particle",
+                    "coefficient": {
+                      "correct": "2",
+                      "accepted": [
+                        "2"
+                      ]
+                    },
+                    "formula": [
+                      {
+                        "element": {
+                          "correct": "Ag",
+                          "accepted": [
+                            "Ag",
+                            "ag"
+                          ]
+                        },
+                        "index": {
+                          "correct": "",
+                          "accepted": [
+                            "",
+                            "1"
+                          ]
+                        },
+                        "charge": {
+                          "correct": "+",
+                          "accepted": [
+                            "+",
+                            "1+",
+                            "+1",
+                            "⁺"
+                          ]
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "arrow"
+                  },
+                  {
+                    "type": "particle",
+                    "coefficient": {
+                      "correct": "",
+                      "accepted": [
+                        "",
+                        "1"
+                      ]
+                    },
+                    "formula": [
+                      {
+                        "element": {
+                          "correct": "Mg",
+                          "accepted": [
+                            "Mg",
+                            "mg"
+                          ]
+                        },
+                        "index": {
+                          "correct": "",
+                          "accepted": [
+                            "",
+                            "1"
+                          ]
+                        },
+                        "charge": {
+                          "correct": "2+",
+                          "accepted": [
+                            "2+",
+                            "+2",
+                            "²⁺"
+                          ]
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "plus"
+                  },
+                  {
+                    "type": "particle",
+                    "coefficient": {
+                      "correct": "2",
+                      "accepted": [
+                        "2"
+                      ]
+                    },
+                    "formula": [
+                      {
+                        "element": {
+                          "correct": "Ag",
+                          "accepted": [
+                            "Ag",
+                            "ag"
+                          ]
+                        },
+                        "index": {
+                          "correct": "",
+                          "accepted": [
+                            "",
+                            "1"
+                          ]
+                        },
+                        "charge": {
+                          "correct": "",
+                          "accepted": [
+                            "",
+                            "0"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "modelAnswer": "Oxidation: Mg → Mg²⁺ + 2 e⁻. Reduktion: 2 Ag⁺ + 2 e⁻ → 2 Ag. Gesamtreaktion: Mg + 2 Ag⁺ → Mg²⁺ + 2 Ag."
+        }
+      ]
+    },
+    {
+      "id": "practice-spontaneity",
+      "title": "Übung 5: Freiwilligkeit beurteilen",
+      "shortTitle": "Freiwilligkeit",
+      "description": "Beurteile mithilfe der Zellspannung, ob eine Redoxreaktion freiwillig ablaufen kann.",
+      "type": "mixedExercise",
+      "checking": {
+        "type": "criteria"
+      },
+      "cases": [
+        {
+          "id": "spontaneity-a",
+          "title": "Aufgabe A: Kupfer reagiert mit Silber-Ionen",
+          "materials": [
+            {
+              "title": "Material 1: Mögliche Reaktion",
+              "type": "reaction-list",
+              "content": [
+                "Cu + 2 Ag⁺ → Cu²⁺ + 2 Ag"
+              ]
+            },
+            {
+              "title": "Material 2: Standardelektrodenpotenziale",
+              "type": "table",
+              "columns": [
+                "Redoxpaar",
+                "E° in V"
+              ],
+              "rows": [
+                [
+                  "Cu²⁺/Cu",
+                  "+0,34"
+                ],
+                [
+                  "Ag⁺/Ag",
+                  "+0,80"
+                ]
+              ]
+            }
+          ],
+          "calculationPart": {
+            "type": "calculation",
+            "checking": {
+              "type": "direct",
+              "feedback": "color"
+            },
+            "prompt": "Berechne zunächst die Zellspannung.",
+            "fields": [
+              {
+                "id": "eKathode",
+                "label": "E(Kathode) in V",
+                "correctValue": 0.8
+              },
+              {
+                "id": "eAnode",
+                "label": "E(Anode) in V",
+                "correctValue": 0.34
+              },
+              {
+                "id": "voltage",
+                "label": "U in V",
+                "correctValue": 0.46
+              }
+            ],
+            "tolerance": 0.01,
+            "modelAnswer": "U = E(Kathode) − E(Anode) = 0,80 V − 0,34 V = 0,46 V."
+          },
+          "freeTextPart": {
+            "type": "freeText",
+            "checking": {
+              "type": "criteria"
+            },
+            "prompt": "Beurteile, ob die Reaktion freiwillig abläuft. Begründe mithilfe der Zellspannung und der beteiligten Teilreaktionen.",
+            "modelAnswer": "Die Reaktion läuft freiwillig ab, weil die Zellspannung mit 0,46 V positiv ist. Kupfer wird oxidiert und gibt Elektronen ab. Silber-Ionen werden reduziert und nehmen Elektronen auf.",
+            "criteria": [
+              {
+                "label": "Die Reaktion wird als freiwillig beurteilt.",
+                "matchMode": "any",
+                "keywords": [
+                  "freiwillig",
+                  "läuft ab",
+                  "laeuft ab",
+                  "spontan"
+                ]
+              },
+              {
+                "label": "Die positive Zellspannung wird als Begründung genannt.",
+                "matchMode": "allGroups",
+                "keywordGroups": [
+                  [
+                    "positive zellspannung",
+                    "positive spannung",
+                    "zellspannung ist positiv",
+                    "spannung ist positiv",
+                    "u ist positiv",
+                    "u > 0",
+                    "größer 0",
+                    "groesser 0",
+                    "0,46",
+                    "0.46"
+                  ],
+                  [
+                    "zellspannung",
+                    "spannung",
+                    "u"
+                  ]
+                ]
+              },
+              {
+                "label": "Silber-Ionen werden als reduzierte Teilchen erkannt.",
+                "matchMode": "allGroups",
+                "keywordGroups": [
+                  [
+                    "ag+",
+                    "ag⁺",
+                    "ag(1+)",
+                    "silber-ionen",
+                    "silberionen",
+                    "silber-ion",
+                    "silberion"
+                  ],
+                  [
+                    "elektronenaufnahme",
+                    "elektronen aufnehmen",
+                    "nimmt elektronen auf",
+                    "nehmen elektronen auf",
+                    "reduktion",
+                    "reduziert",
+                    "wird reduziert"
+                  ]
+                ]
+              },
+              {
+                "label": "Kupfer wird als oxidiertes Teilchen erkannt.",
+                "matchMode": "allGroups",
+                "keywordGroups": [
+                  [
+                    "kupfer",
+                    "cu"
+                  ],
+                  [
+                    "elektronenabgabe",
+                    "elektronen abgeben",
+                    "gibt elektronen ab",
+                    "geben elektronen ab",
+                    "oxidation",
+                    "oxidiert",
+                    "wird oxidiert"
+                  ]
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "spontaneity-b",
+          "title": "Aufgabe B: Silber reagiert mit Kupfer-Ionen",
+          "materials": [
+            {
+              "title": "Material 1: Mögliche Reaktion",
+              "type": "reaction-list",
+              "content": [
+                "2 Ag + Cu²⁺ → 2 Ag⁺ + Cu"
+              ]
+            },
+            {
+              "title": "Material 2: Standardelektrodenpotenziale",
+              "type": "table",
+              "columns": [
+                "Redoxpaar",
+                "E° in V"
+              ],
+              "rows": [
+                [
+                  "Cu²⁺/Cu",
+                  "+0,34"
+                ],
+                [
+                  "Ag⁺/Ag",
+                  "+0,80"
+                ]
+              ]
+            }
+          ],
+          "calculationPart": {
+            "type": "calculation",
+            "checking": {
+              "type": "direct",
+              "feedback": "color"
+            },
+            "prompt": "Berechne die Zellspannung für die angegebene Reaktionsrichtung.",
+            "fields": [
+              {
+                "id": "eKathode",
+                "label": "E(Kathode) in V",
+                "correctValue": 0.34
+              },
+              {
+                "id": "eAnode",
+                "label": "E(Anode) in V",
+                "correctValue": 0.8
+              },
+              {
+                "id": "voltage",
+                "label": "U in V",
+                "correctValue": -0.46
+              }
+            ],
+            "tolerance": 0.01,
+            "modelAnswer": "Für die angegebene Richtung gilt: U = 0,34 V − 0,80 V = −0,46 V."
+          },
+          "freeTextPart": {
+            "type": "freeText",
+            "checking": {
+              "type": "criteria"
+            },
+            "prompt": "Beurteile, ob die angegebene Reaktion freiwillig abläuft.",
+            "modelAnswer": "Die Reaktion läuft nicht freiwillig ab, weil die Zellspannung mit −0,46 V negativ ist. Die freiwillige Richtung wäre die Umkehrreaktion: Cu + 2 Ag⁺ → Cu²⁺ + 2 Ag.",
+            "criteria": [
+              {
+                "label": "Die Reaktion wird als nicht freiwillig beurteilt.",
+                "matchMode": "any",
+                "keywords": [
+                  "nicht freiwillig",
+                  "läuft nicht",
+                  "laeuft nicht",
+                  "nicht spontan"
+                ]
+              },
+              {
+                "label": "Die negative Zellspannung wird als Begründung genannt.",
+                "matchMode": "allGroups",
+                "keywordGroups": [
+                  [
+                    "negative zellspannung",
+                    "negative spannung",
+                    "zellspannung ist negativ",
+                    "spannung ist negativ",
+                    "u ist negativ",
+                    "u < 0",
+                    "kleiner 0",
+                    "-0,46",
+                    "-0.46"
+                  ],
+                  [
+                    "zellspannung",
+                    "spannung",
+                    "u"
+                  ]
+                ]
+              },
+              {
+                "label": "Die Umkehrreaktion wird als freiwillige Richtung erkannt.",
+                "matchMode": "any",
+                "keywords": [
+                  "umkehrreaktion",
+                  "umkehrung",
+                  "andere richtung",
+                  "gegenteilige richtung"
+                ]
+              },
+              {
+                "label": "Silber wird als zu edel für die Elektronenabgabe an Kupfer-Ionen erkannt.",
+                "matchMode": "allGroups",
+                "keywordGroups": [
+                  [
+                    "silber",
+                    "ag"
+                  ],
+                  [
+                    "edler",
+                    "höheres potenzial",
+                    "hoeheres potenzial"
+                  ]
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "spontaneity-c",
+          "title": "Aufgabe C: Zink reagiert mit Kupfer-Ionen",
+          "materials": [
+            {
+              "title": "Material 1: Mögliche Reaktion",
+              "type": "reaction-list",
+              "content": [
+                "Zn + Cu²⁺ → Zn²⁺ + Cu"
+              ]
+            },
+            {
+              "title": "Material 2: Standardelektrodenpotenziale",
+              "type": "table",
+              "columns": [
+                "Redoxpaar",
+                "E° in V"
+              ],
+              "rows": [
+                [
+                  "Zn²⁺/Zn",
+                  "−0,76"
+                ],
+                [
+                  "Cu²⁺/Cu",
+                  "+0,34"
+                ]
+              ]
+            }
+          ],
+          "calculationPart": {
+            "type": "calculation",
+            "checking": {
+              "type": "direct",
+              "feedback": "color"
+            },
+            "prompt": "Berechne zunächst die Zellspannung.",
+            "fields": [
+              {
+                "id": "eKathode",
+                "label": "E(Kathode) in V",
+                "correctValue": 0.34
+              },
+              {
+                "id": "eAnode",
+                "label": "E(Anode) in V",
+                "correctValue": -0.76
+              },
+              {
+                "id": "voltage",
+                "label": "U in V",
+                "correctValue": 1.1
+              }
+            ],
+            "tolerance": 0.01,
+            "modelAnswer": "U = E(Kathode) − E(Anode) = 0,34 V − (−0,76 V) = 1,10 V."
+          },
+          "freeTextPart": {
+            "type": "freeText",
+            "checking": {
+              "type": "criteria"
+            },
+            "prompt": "Beurteile, ob die Reaktion freiwillig abläuft.",
+            "modelAnswer": "Die Reaktion läuft freiwillig ab, weil die Zellspannung mit 1,10 V positiv ist. Zink wird oxidiert und gibt Elektronen ab. Kupfer-Ionen werden reduziert.",
+            "criteria": [
+              {
+                "label": "Die Reaktion wird als freiwillig beurteilt.",
+                "matchMode": "any",
+                "keywords": [
+                  "freiwillig",
+                  "läuft ab",
+                  "laeuft ab",
+                  "spontan"
+                ]
+              },
+              {
+                "label": "Die positive Zellspannung wird genannt.",
+                "matchMode": "allGroups",
+                "keywordGroups": [
+                  [
+                    "positive zellspannung",
+                    "positive spannung",
+                    "zellspannung ist positiv",
+                    "spannung ist positiv",
+                    "u ist positiv",
+                    "u > 0",
+                    "größer 0",
+                    "groesser 0",
+                    "1,10",
+                    "1.10"
+                  ],
+                  [
+                    "zellspannung",
+                    "spannung",
+                    "u"
+                  ]
+                ]
+              },
+              {
+                "label": "Zink wird oxidiert.",
+                "matchMode": "allGroups",
+                "keywordGroups": [
+                  [
+                    "zink",
+                    "zn"
+                  ],
+                  [
+                    "elektronenabgabe",
+                    "elektronen abgeben",
+                    "gibt elektronen ab",
+                    "geben elektronen ab",
+                    "oxidation",
+                    "oxidiert",
+                    "wird oxidiert"
+                  ]
+                ]
+              },
+              {
+                "label": "Kupfer-Ionen werden reduziert.",
+                "matchMode": "allGroups",
+                "keywordGroups": [
+                  [
+                    "cu2+",
+                    "cu²⁺",
+                    "cu(2+)",
+                    "kupfer-ionen",
+                    "kupferionen",
+                    "kupfer-ion",
+                    "kupferion"
+                  ],
+                  [
+                    "elektronenaufnahme",
+                    "elektronen aufnehmen",
+                    "nimmt elektronen auf",
+                    "nehmen elektronen auf",
+                    "reduktion",
+                    "reduziert",
+                    "wird reduziert"
+                  ]
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "spontaneity-d",
+          "title": "Aufgabe D: Kupfer reagiert mit Zink-Ionen",
+          "materials": [
+            {
+              "title": "Material 1: Mögliche Reaktion",
+              "type": "reaction-list",
+              "content": [
+                "Cu + Zn²⁺ → Cu²⁺ + Zn"
+              ]
+            },
+            {
+              "title": "Material 2: Standardelektrodenpotenziale",
+              "type": "table",
+              "columns": [
+                "Redoxpaar",
+                "E° in V"
+              ],
+              "rows": [
+                [
+                  "Zn²⁺/Zn",
+                  "−0,76"
+                ],
+                [
+                  "Cu²⁺/Cu",
+                  "+0,34"
+                ]
+              ]
+            }
+          ],
+          "calculationPart": {
+            "type": "calculation",
+            "checking": {
+              "type": "direct",
+              "feedback": "color"
+            },
+            "prompt": "Berechne die Zellspannung für die angegebene Reaktionsrichtung.",
+            "fields": [
+              {
+                "id": "eKathode",
+                "label": "E(Kathode) in V",
+                "correctValue": -0.76
+              },
+              {
+                "id": "eAnode",
+                "label": "E(Anode) in V",
+                "correctValue": 0.34
+              },
+              {
+                "id": "voltage",
+                "label": "U in V",
+                "correctValue": -1.1
+              }
+            ],
+            "tolerance": 0.01,
+            "modelAnswer": "Für die angegebene Richtung gilt: U = −0,76 V − 0,34 V = −1,10 V."
+          },
+          "freeTextPart": {
+            "type": "freeText",
+            "checking": {
+              "type": "criteria"
+            },
+            "prompt": "Beurteile, ob die angegebene Reaktion freiwillig abläuft.",
+            "modelAnswer": "Die Reaktion läuft nicht freiwillig ab, weil die Zellspannung mit −1,10 V negativ ist. Zink ist unedler als Kupfer; freiwillig läuft daher die Reaktion Zn + Cu²⁺ → Zn²⁺ + Cu ab.",
+            "criteria": [
+              {
+                "label": "Die Reaktion wird als nicht freiwillig beurteilt.",
+                "matchMode": "any",
+                "keywords": [
+                  "nicht freiwillig",
+                  "läuft nicht",
+                  "laeuft nicht",
+                  "nicht spontan"
+                ]
+              },
+              {
+                "label": "Die negative Zellspannung wird genannt.",
+                "matchMode": "allGroups",
+                "keywordGroups": [
+                  [
+                    "negative zellspannung",
+                    "negative spannung",
+                    "zellspannung ist negativ",
+                    "spannung ist negativ",
+                    "u ist negativ",
+                    "u < 0",
+                    "kleiner 0",
+                    "-1,10",
+                    "-1.10"
+                  ],
+                  [
+                    "zellspannung",
+                    "spannung",
+                    "u"
+                  ]
+                ]
+              },
+              {
+                "label": "Zink wird als unedler als Kupfer erkannt.",
+                "matchMode": "allGroups",
+                "keywordGroups": [
+                  [
+                    "zink",
+                    "zn"
+                  ],
+                  [
+                    "kupfer",
+                    "cu"
+                  ],
+                  [
+                    "unedler",
+                    "niedrigeres potenzial"
+                  ]
+                ]
+              },
+              {
+                "label": "Die freiwillige Umkehrreaktion wird erkannt.",
+                "matchMode": "any",
+                "keywords": [
+                  "zn + cu",
+                  "zink reagiert mit kupfer",
+                  "umkehrreaktion",
+                  "umkehrung",
+                  "andere richtung"
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "standardPotentials": [
+    {
+      "id": "mg",
+      "redoxPair": "Mg²⁺/Mg",
+      "oxidizedForm": "Mg²⁺",
+      "reducedForm": "Mg",
+      "metal": "Magnesium",
+      "symbol": "Mg",
+      "potential": -2.37
+    },
+    {
+      "id": "zn",
+      "redoxPair": "Zn²⁺/Zn",
+      "oxidizedForm": "Zn²⁺",
+      "reducedForm": "Zn",
+      "metal": "Zink",
+      "symbol": "Zn",
+      "potential": -0.76
+    },
+    {
+      "id": "fe",
+      "redoxPair": "Fe²⁺/Fe",
+      "oxidizedForm": "Fe²⁺",
+      "reducedForm": "Fe",
+      "metal": "Eisen",
+      "symbol": "Fe",
+      "potential": -0.44
+    },
+    {
+      "id": "h2",
+      "redoxPair": "2 H⁺/H₂",
+      "oxidizedForm": "H⁺",
+      "reducedForm": "H₂",
+      "metal": "Standardwasserstoffelektrode",
+      "symbol": "H₂",
+      "potential": 0
+    },
+    {
+      "id": "cu",
+      "redoxPair": "Cu²⁺/Cu",
+      "oxidizedForm": "Cu²⁺",
+      "reducedForm": "Cu",
+      "metal": "Kupfer",
+      "symbol": "Cu",
+      "potential": 0.34
+    },
+    {
+      "id": "ag",
+      "redoxPair": "Ag⁺/Ag",
+      "oxidizedForm": "Ag⁺",
+      "reducedForm": "Ag",
+      "metal": "Silber",
+      "symbol": "Ag",
+      "potential": 0.8
+    }
+  ]
+};
+
+  const state = { view: 'home', notice: '', selectedTaskId: null, electrodeView: 'overview', selectedElectrodeExerciseId: null, electrodeHalfCellA: null, electrodeHalfCellB: null, electrodeSheCellId: null, inputs: {}, directResults: {}, electrodeResults: {}, criteriaVisible: {}, criteriaResults: {}, electrodeCriteriaVisible: {}, solutions: {} };
   const selfCheckStorageKey = 'electrochemistry-self-check';
 
   function pageHeader(title, subtitle) {
@@ -1573,7 +4276,7 @@ const klausurTaskMeta = {
   }
   function backButton(label, view) { return `<button type="button" class="back-button" data-nav="${view}">← ${label}</button>`; }
   function formula(value, block = false) { return `<${block ? 'div' : 'span'} class="formula${block ? ' formula--block' : ''}">${value}</${block ? 'div' : 'span'}>`; }
-  function navigate(view) { state.view = view; state.notice = ''; if (view === 'klausurTasks') state.selectedTaskId = null; render(); }
+  function navigate(view) { state.view = view; state.notice = ''; if (view === 'klausurTasks') state.selectedTaskId = null; if (view === 'electrodePotentials') { state.electrodeView = 'overview'; state.selectedElectrodeExerciseId = null; } render(); }
   function fieldId(...parts) { return parts.join('__'); }
   function valueFor(id) { return state.inputs[id] ?? ''; }
   function resultClass(subtaskId, id) { const result = state.directResults[subtaskId]; return !result || !(id in result) ? '' : result[id] ? 'is-correct' : 'is-wrong'; }
@@ -1601,6 +4304,34 @@ const klausurTaskMeta = {
   }
   function renderSelfCheck() { let checked = {}; try { checked = JSON.parse(localStorage.getItem(selfCheckStorageKey) || '{}'); } catch {} return `<div class="self-check-actions no-print">${backButton('Zurück zur Startseite', 'home')}<button type="button" class="primary-button" data-print>Selbstcheck drucken / als PDF speichern</button></div>${pageHeader('Selbstcheck', 'Hake ab, welche Kompetenzen du schon sicher beherrschst.')}<div class="self-check-list">${selfCheckCompetencies.map((cat, ci) => `<section class="self-check-category"><h2>${cat.category}</h2><div class="self-check-items">${cat.items.map((item, ii) => { const id = `${ci}-${ii}`; return `<label class="self-check-item"><input type="checkbox" data-self-check="${id}" ${checked[id] ? 'checked' : ''} /><span>${item}</span></label>`; }).join('')}</div></section>`).join('')}</div>`; }
   function renderOverview() { return `${backButton('Zur Startseite', 'home')}${pageHeader('Redoxreaktionen aufstellen', 'Dieses Modul steht in der lokalen Einzeldatei als Übersicht bereit. Für die interaktiven Übungen bitte die Projektversion starten.')}`; }
+  function formatLocalVoltage(value) { return `${value >= 0 ? '+' : '−'}${Math.abs(value).toFixed(2).replace('.', ',')} V`; }
+  function electrodeResultClass(exerciseId, id) { const result = state.electrodeResults[exerciseId]; return !result || !(id in result) ? '' : result[id] ? 'is-correct' : 'is-wrong'; }
+  function electrodeFieldId(...parts) { return ['electrode', ...parts].join('__'); }
+  function electrodeAccepted(value, accepted = []) { return accepted.some(item => normalizePlain(value).replace(/\s/g, '') === normalizePlain(item).replace(/\s/g, '')); }
+  function mixedOptions(options = []) { if (options.length < 2) return options; if (options.length === 2) return [...options].reverse(); const midpoint = Math.ceil(options.length / 2); return [...options.slice(midpoint), ...options.slice(0, midpoint)]; }
+  function renderElectrodeOperatorChips(operators = []) { return operators.map(operator => `<span class="operator-chip afb-${String(operator.afb).toLowerCase()}">${operator.name} · AFB ${operator.afb}</span>`).join(''); }
+  function renderElectrodeMaterials(materials = []) { return materials.map(material => { if (material.type === 'table') return `<section class="material-block"><h3>${material.title}</h3><div class="table-scroll"><table class="material-table"><thead><tr>${material.columns.map(c => `<th>${c}</th>`).join('')}</tr></thead><tbody>${material.rows.map(row => `<tr>${row.map(cell => `<td>${cell}</td>`).join('')}</tr>`).join('')}</tbody></table></div></section>`; if (material.type === 'text-list' || material.type === 'reaction-list') return `<section class="material-block"><h3>${material.title}</h3><ul>${material.content.map(item => `<li>${item}</li>`).join('')}</ul></section>`; return `<section class="material-block"><h3>${material.title}</h3><p>${material.content || ''}</p></section>`; }).join(''); }
+  function renderElectrodeInfoSections(sections = []) { return `<div class="info-sections">${sections.map(section => `<section class="info-section"><h2>${section.title}</h2>${(section.content || []).map(p => `<p>${p}</p>`).join('')}${section.labels ? `<div class="label-chip-row">${section.labels.map(label => `<span class="label-chip">${label}</span>`).join('')}</div>` : ''}${section.formula ? `<div class="formula-box">${section.formula}</div>` : ''}${section.keyIdea ? `<div class="key-idea">${section.keyIdea}</div>` : ''}${section.example ? `<div class="example-box"><h3>${section.example.title}</h3><p><strong>Gegeben:</strong> ${section.example.given.join(', ')}</p><ul>${section.example.solution.map(item => `<li>${item}</li>`).join('')}</ul></div>` : ''}</section>`).join('')}</div>`; }
+  function electrodeViewName(targetView) { return targetView === 'electrodePotentialIntro' ? 'intro' : targetView; }
+  function selectedPotential(id, fallback) { return electrodePotentialData.standardPotentials.find(cell => cell.id === (id || fallback)) || electrodePotentialData.standardPotentials[0]; }
+  function renderHalfCellSelector(interactiveElement) { const options = interactiveElement.potentials; const a = selectedPotential(state.electrodeHalfCellA, interactiveElement.defaultSelection.halfCellA); const b = selectedPotential(state.electrodeHalfCellB, interactiveElement.defaultSelection.halfCellB); const cathode = a.potential >= b.potential ? a : b; const anode = cathode.id === a.id ? b : a; const voltage = cathode.potential - anode.potential; const cellLabel = cell => cell?.symbol || cell?.redoxPair || cell?.title || ''; return `<section class="interactive-box"><h2>${interactiveElement.title}</h2><p>${interactiveElement.instruction}</p><div class="selector-row"><label>Halbzelle A<select data-electrode-half="a">${options.map(cell => `<option value="${cell.id}" ${cell.id === a.id ? 'selected' : ''}>${cell.redoxPair} (${formatLocalVoltage(cell.potential)})</option>`).join('')}</select></label><label>Halbzelle B<select data-electrode-half="b">${options.map(cell => `<option value="${cell.id}" ${cell.id === b.id ? 'selected' : ''}>${cell.redoxPair} (${formatLocalVoltage(cell.potential)})</option>`).join('')}</select></label></div><div class="result-box"><p><strong>Kathode:</strong> ${cathode.redoxPair}</p><p><strong>Anode:</strong> ${anode.redoxPair}</p><p><strong>Elektronenfluss:</strong> von ${cellLabel(anode)} zu ${cellLabel(cathode)}</p><p><strong>Zellspannung:</strong> ${formatLocalVoltage(voltage)}</p></div></section>`; }
+  function renderSheSimulation(simulation) { const selected = simulation.selectableHalfCells.find(cell => cell.id === (state.electrodeSheCellId || simulation.selectableHalfCells[0].id)) || simulation.selectableHalfCells[0]; const h2 = electrodePotentialData.standardPotentials.find(cell => cell.id === 'h2'); const cathode = selected.potential >= h2.potential ? selected : h2; const anode = cathode.id === selected.id ? h2 : selected; const voltage = cathode.potential - anode.potential; const cellLabel = cell => cell?.symbol || cell?.redoxPair || cell?.title || ''; return `<section class="interactive-box she-simulation"><h2>${simulation.title}</h2><p>${simulation.instruction}</p><label>Metallhalbzelle auswählen<select data-electrode-she>${simulation.selectableHalfCells.map(cell => `<option value="${cell.id}" ${cell.id === selected.id ? 'selected' : ''}>${cell.redoxPair} (${formatLocalVoltage(cell.potential)})</option>`).join('')}</select></label><div class="she-visual"><div class="half-cell-card"><span class="large-symbol">H₂</span><strong>Standardwasserstoffelektrode</strong><span>E° = 0,00 V</span></div><div class="voltmeter-card"><strong>Voltmeter</strong><span class="large-symbol">${formatLocalVoltage(voltage)}</span><span class="electron-arrow">e⁻: ${cellLabel(anode)} → ${cellLabel(cathode)}</span></div><div class="half-cell-card"><span class="large-symbol">${selected.redoxPair}</span><strong>${selected.title}</strong><span>E° = ${formatLocalVoltage(selected.potential)}</span></div></div><div class="result-box"><p><strong>Anode:</strong> ${anode.redoxPair}</p><p><strong>Kathode:</strong> ${cathode.redoxPair}</p><p><strong>Oxidation:</strong> an der Anode</p><p><strong>Reduktion:</strong> an der Kathode</p></div></section>`; }
+  function renderElectrodeOverview() { return `${backButton('Zur Hauptübersicht', 'home')}${pageHeader(electrodePotentialData.meta.title, electrodePotentialData.meta.subtitle)}<div class="module-card-grid">${electrodePotentialData.overviewCards.map(card => `<button type="button" class="module-card" data-open-electrode-view="${electrodeViewName(card.targetView)}">${card.icon ? `<span class="module-card-icon">${card.icon}</span>` : ''}<h2>${card.title}</h2><p>${card.description}</p><div class="operator-chips">${renderElectrodeOperatorChips(card.operators)}</div><span class="module-card-action">Öffnen →</span></button>`).join('')}</div>`; }
+  function renderElectrodeIntro() { const page = electrodePotentialData.introPage; return `${backButton('Zur Modulübersicht', 'electrodePotentials')}${pageHeader(page.title, page.subtitle)}${renderElectrodeInfoSections(page.sections)}${renderHalfCellSelector(page.interactiveElement)}`; }
+  function renderElectrodeShe() { const page = electrodePotentialData.shePage; return `${backButton('Zur Modulübersicht', 'electrodePotentials')}${pageHeader(page.title, page.subtitle)}${renderElectrodeInfoSections(page.sections)}${renderSheSimulation(page.simulation)}`; }
+  function renderElectrodePracticeOverview() { const page = electrodePotentialData.practiceOverview; return `${backButton('Zur Modulübersicht', 'electrodePotentials')}${pageHeader(page.title, page.subtitle)}<div class="module-card-grid">${page.cards.map(card => `<button type="button" class="module-card" data-open-electrode-exercise="${card.targetExerciseId}"><h2>${card.title}</h2><p>${card.description}</p><div class="operator-chips">${renderElectrodeOperatorChips(card.operators)}</div><span class="module-card-action">Aufgabe öffnen</span></button>`).join('')}</div>`; }
+  function renderElectrodeModelAnswer(id, text) { return text ? `<div class="model-answer-wrapper"><button type="button" class="secondary-button" data-solution="${id}">Musterlösung ${state.solutions[id] ? 'ausblenden' : 'anzeigen'}</button>${state.solutions[id] ? `<div class="model-answer"><p>${text}</p></div>` : ''}</div>` : ''; }
+  function renderElectrodeMatching(exercise) { return `<div class="exercise-content">${renderElectrodeMaterials(exercise.materials)}${(exercise.tasks || []).map(task => `<section class="task-box">${task.title ? `<h2>${task.title}</h2>` : ''}${task.prompt ? `<p>${task.prompt}</p>` : ''}<div class="matching-grid">${task.pairs.map(pair => { const id = electrodeFieldId(exercise.id, task.id, pair.left); return `<label class="matching-row"><span>${pair.left}</span><select class="${electrodeResultClass(exercise.id, id)}" data-input="${id}" data-electrode-input><option value="">Bitte auswählen</option>${mixedOptions(task.rightOptions).map(option => `<option value="${option}" ${valueFor(id) === option ? 'selected' : ''}>${option}</option>`).join('')}</select></label>`; }).join('')}</div></section>`).join('')}<button type="button" class="primary-button" data-check-electrode="${exercise.id}">Antwort prüfen</button>${renderElectrodeModelAnswer(exercise.id, exercise.modelAnswer)}</div>`; }
+  function renderElectrodeStructured(exercise) { return `<div class="exercise-content">${renderElectrodeMaterials(exercise.materials)}${exercise.tasks.map(task => `<section class="task-box">${task.title ? `<h2>${task.title}</h2>` : ''}${task.prompt ? `<p>${task.prompt}</p>` : ''}<div class="structured-field-grid">${task.fields.map(field => { const id = electrodeFieldId(exercise.id, task.id, field.id); return `<label>${field.label}<input type="text" class="${electrodeResultClass(exercise.id, id)}" value="${valueFor(id)}" data-input="${id}" data-electrode-input></label>`; }).join('')}</div>${renderElectrodeModelAnswer(`${exercise.id}-${task.id}`, task.modelAnswer)}</section>`).join('')}<button type="button" class="primary-button" data-check-electrode="${exercise.id}">Antwort prüfen</button>${renderElectrodeModelAnswer(exercise.id, exercise.modelAnswer)}</div>`; }
+  function renderElectrodeCalculation(exercise) { const tasks = exercise.tasks || [exercise]; return `<div class="exercise-content">${exercise.formula ? `<div class="formula-box">${exercise.formula}</div>` : ''}${renderElectrodeMaterials(exercise.materials)}${tasks.map(task => `<section class="task-box">${task.title ? `<h2>${task.title}</h2>` : ''}${task.prompt ? `<p>${task.prompt}</p>` : ''}<div class="calculation-grid">${task.fields.map(field => { const id = electrodeFieldId(exercise.id, task.id, field.id); return `<label>${field.label}<input type="text" inputmode="decimal" class="${electrodeResultClass(exercise.id, id)}" value="${valueFor(id)}" data-input="${id}" data-electrode-input></label>`; }).join('')}</div>${renderElectrodeModelAnswer(`${exercise.id}-${task.id}`, task.modelAnswer)}</section>`).join('')}<button type="button" class="primary-button" data-check-electrode="${exercise.id}">Antwort prüfen</button></div>`; }
+  function renderElectrodeScaffold(exercise) { const tasks = exercise.tasks || [{ id: exercise.id, title: exercise.title, prompt: exercise.prompt, materials: exercise.materials, scaffold: exercise.scaffold, modelAnswer: exercise.modelAnswer }]; const input = (exerciseId, id, label, cls = 'equation-input') => `<input class="${cls} ${electrodeResultClass(exerciseId, id)}" value="${valueFor(id)}" data-input="${id}" data-electrode-input aria-label="${label}">`; const partHtml = (exerciseId, taskId, part, eqi, pi) => { if (part.type === 'plus') return '<span class="equation-symbol">+</span>'; if (part.type === 'arrow') return '<span class="equation-symbol">→</span>'; if (part.type === 'electron') { const base = electrodeFieldId(exerciseId, taskId, 'scaffold', eqi, pi); return `<span class="equation-electron">${input(exerciseId, `${base}__coefficient`, 'Elektronenanzahl')}<span>e</span><sup>${input(exerciseId, `${base}__charge`, 'Elektronenladung')}</sup></span>`; } return `<span class="equation-particle">${input(exerciseId, electrodeFieldId(exerciseId, taskId, 'scaffold', eqi, pi, 'coefficient'), 'Koeffizient')}${part.formula.map((item, fi) => { const base = electrodeFieldId(exerciseId, taskId, 'scaffold', eqi, pi, fi); return `<span class="formula-unit">${input(exerciseId, `${base}__element`, 'Elementsymbol')}<sub>${input(exerciseId, `${base}__index`, 'Index')}</sub><sup>${input(exerciseId, `${base}__charge`, 'Ladung')}</sup></span>`; }).join('')}</span>`; }; return `<div class="exercise-content">${exercise.tasks ? renderElectrodeMaterials(exercise.materials) : ''}${tasks.map(task => `<section class="task-box">${renderElectrodeMaterials(task.materials)}${task.title ? `<h2>${task.title}</h2>` : ''}${task.prompt ? `<p>${task.prompt}</p>` : ''}${task.scaffold?.instruction ? `<p>${task.scaffold.instruction}</p>` : ''}<div class="equation-scaffold-list">${(task.scaffold?.equations || []).map((eq, eqi) => `<div class="equation-row"><strong>${eq.label}:</strong><div class="equation-line">${eq.parts.map((part, pi) => partHtml(exercise.id, task.id, part, eqi, pi)).join('')}</div>${state.electrodeResults[exercise.id] && eq.expectedDisplay ? `<p class="expected-display">Lösung: ${eq.expectedDisplay}</p>` : ''}</div>`).join('')}</div>${renderElectrodeModelAnswer(`${exercise.id}-${task.id}`, task.modelAnswer)}</section>`).join('')}<button type="button" class="primary-button" data-check-electrode="${exercise.id}">Antwort prüfen</button>${renderElectrodeModelAnswer(exercise.id, exercise.modelAnswer)}</div>`; }
+  function renderElectrodeCriteria(criteria = [], answer = '') { return `<div class="criteria-box"><h3>Deine Antwort enthält:</h3><ul>${criteria.map(c => { const met = criterionMatches(c, answer); return `<li class="${met ? 'criterion-met' : 'criterion-open'}">${met ? '✓' : '○'} ${c.label}</li>`; }).join('')}</ul></div>`; }
+  function renderElectrodeMixed(exercise) { const cases = exercise.cases || [{ id: exercise.id, title: exercise.title, materials: exercise.materials, calculationPart: exercise.calculationPart, freeTextPart: exercise.freeTextPart }]; return `<div class="exercise-content">${cases.map(currentCase => { const calc = currentCase.calculationPart; const free = currentCase.freeTextPart; const textId = electrodeFieldId(exercise.id, currentCase.id, 'freeText'); return `<section class="task-box">${currentCase.title ? `<h2>${currentCase.title}</h2>` : ''}${renderElectrodeMaterials(currentCase.materials)}<div class="task-box task-box--inner">${calc.prompt ? `<h3>${calc.prompt}</h3>` : ''}<div class="calculation-grid">${calc.fields.map(field => { const id = electrodeFieldId(exercise.id, currentCase.id, 'calc', field.id); return `<label>${field.label}<input type="text" inputmode="decimal" class="${electrodeResultClass(exercise.id, id)}" value="${valueFor(id)}" data-input="${id}" data-electrode-input></label>`; }).join('')}</div><button type="button" class="primary-button" data-check-electrode-case="${currentCase.id}">Rechnung prüfen</button>${renderElectrodeModelAnswer(`${exercise.id}-${currentCase.id}-calc`, calc.modelAnswer)}</div><div class="task-box task-box--inner">${free.prompt ? `<h3>${free.prompt}</h3>` : ''}<textarea class="free-text-area" data-input="${textId}" data-electrode-input>${valueFor(textId)}</textarea><button type="button" class="primary-button" data-check-electrode-criteria="${currentCase.id}">${state.electrodeCriteriaVisible[currentCase.id] ? 'Antwort erneut überprüfen' : 'Antwort überprüfen'}</button>${state.electrodeCriteriaVisible[currentCase.id] ? `${renderElectrodeCriteria(free.criteria, valueFor(textId))}${renderElectrodeModelAnswer(`${exercise.id}-${currentCase.id}-text`, free.modelAnswer)}` : ''}</div></section>`; }).join('')}</div>`; }
+  function renderElectrodeExercise() { const exercise = electrodePotentialData.practiceExercises.find(item => item.id === state.selectedElectrodeExerciseId); if (!exercise) return renderElectrodePracticeOverview(); const body = exercise.type === 'matchingExercise' ? renderElectrodeMatching(exercise) : exercise.type === 'halfCellChoiceExercise' ? renderElectrodeStructured(exercise) : exercise.type === 'calculationExercise' ? renderElectrodeCalculation(exercise) : exercise.type === 'redoxEquationScaffold' ? renderElectrodeScaffold(exercise) : exercise.type === 'mixedExercise' ? renderElectrodeMixed(exercise) : `<section class="task-box">Dieser Übungstyp wird noch nicht unterstützt: ${exercise.type}</section>`; return `${backButton('Zur Übungsübersicht', 'electrodePracticeOverview')}${pageHeader(exercise.title, exercise.description)}${body}`; }
+  function renderElectrodePotentials() { if (state.electrodeView === 'intro') return renderElectrodeIntro(); if (state.electrodeView === 'standardHydrogenElectrode') return renderElectrodeShe(); if (state.electrodeView === 'electrodePotentialPracticeOverview' || state.electrodeView === 'electrodePracticeOverview') return renderElectrodePracticeOverview(); if (state.electrodeView === 'exercise') return renderElectrodeExercise(); return renderElectrodeOverview(); }
+  function findElectrodeExercise(id) { return electrodePotentialData.practiceExercises.find(exercise => exercise.id === id); }
+  function checkElectrodeExercise(exercise) { const results = {}; const numberOk = (id, value, tolerance = 0.01) => { const n = Number(String(valueFor(id)).replace(',', '.').replace(/[^\d.-]/g, '')); results[id] = !Number.isNaN(n) && Math.abs(n - value) <= tolerance; }; if (exercise.type === 'matchingExercise') exercise.tasks.forEach(task => task.pairs.forEach(pair => { const id = electrodeFieldId(exercise.id, task.id, pair.left); results[id] = valueFor(id) === pair.correctRight; })); if (exercise.type === 'halfCellChoiceExercise') exercise.tasks.forEach(task => task.fields.forEach(field => { const id = electrodeFieldId(exercise.id, task.id, field.id); results[id] = electrodeAccepted(valueFor(id), field.correctValues); })); if (exercise.type === 'calculationExercise') (exercise.tasks || [exercise]).forEach(task => task.fields.forEach(field => numberOk(electrodeFieldId(exercise.id, task.id, field.id), field.correctValue, task.tolerance || exercise.tolerance || 0.01))); if (exercise.type === 'redoxEquationScaffold') (exercise.tasks || [{ id: exercise.id, scaffold: exercise.scaffold }]).forEach(task => (task.scaffold?.equations || []).forEach((eq, eqi) => eq.parts.forEach((part, pi) => { if (part.type === 'particle') { const cid = electrodeFieldId(exercise.id, task.id, 'scaffold', eqi, pi, 'coefficient'); results[cid] = isAccepted(valueFor(cid), part.coefficient, 'number'); part.formula.forEach((item, fi) => { const base = electrodeFieldId(exercise.id, task.id, 'scaffold', eqi, pi, fi); results[`${base}__element`] = isAccepted(valueFor(`${base}__element`), item.element, 'element'); results[`${base}__index`] = isAccepted(valueFor(`${base}__index`), item.index, 'number'); results[`${base}__charge`] = isAccepted(valueFor(`${base}__charge`), item.charge, 'charge'); }); } if (part.type === 'electron') { const base = electrodeFieldId(exercise.id, task.id, 'scaffold', eqi, pi); results[`${base}__coefficient`] = isAccepted(valueFor(`${base}__coefficient`), part.coefficient, 'number'); results[`${base}__charge`] = isAccepted(valueFor(`${base}__charge`), part.charge, 'charge'); } }))); if (exercise.type === 'mixedExercise') (exercise.cases || [{ id: exercise.id, calculationPart: exercise.calculationPart }]).forEach(currentCase => currentCase.calculationPart.fields.forEach(field => numberOk(electrodeFieldId(exercise.id, currentCase.id, 'calc', field.id), field.correctValue, currentCase.calculationPart.tolerance || 0.01))); state.electrodeResults[exercise.id] = results; }
+  function checkElectrodeCase(exercise, caseId) { const results = { ...(state.electrodeResults[exercise.id] || {}) }; const currentCase = (exercise.cases || []).find(item => item.id === caseId); if (!currentCase) return; currentCase.calculationPart.fields.forEach(field => { const id = electrodeFieldId(exercise.id, currentCase.id, 'calc', field.id); const n = Number(String(valueFor(id)).replace(',', '.').replace(/[^\d.-]/g, '')); results[id] = !Number.isNaN(n) && Math.abs(n - field.correctValue) <= (currentCase.calculationPart.tolerance || 0.01); }); state.electrodeResults[exercise.id] = results; }
   function renderMaterial(material) { if (material.type === 'table') return `<section class="klausur-material"><h3>${material.title}</h3><div class="klausur-table-wrap"><table><thead><tr>${material.columns.map(c => `<th>${c}</th>`).join('')}</tr></thead><tbody>${material.rows.map(row => `<tr>${row.map(cell => `<td>${cell}</td>`).join('')}</tr>`).join('')}</tbody></table></div></section>`; if (material.type === 'sequence') return `<section class="klausur-material"><h3>${material.title}</h3>${formula(material.content, true)}</section>`; return `<section class="klausur-material"><h3>${material.title}</h3><ul>${(material.content || []).map(item => `<li>${item}</li>`).join('')}</ul></section>`; }
   function renderOxReaction(subtask) { const renderSide = side => subtask.reaction[side].map((particle, pi) => `${pi ? '<span class="fixed-operator">+</span>' : ''}<span class="oxidation-particle">${particle.coefficient ? `<span class="chemical-coefficient">${particle.coefficient}</span>` : ''}${particle.formula.map((entry, ei) => { const id = fieldId(subtask.id, 'ox', side, pi, ei); return `<span class="oxidation-element"><input class="oxidation-input ${resultClass(subtask.id, id)}" value="${valueFor(id)}" data-input="${id}" /><span class="oxidation-symbol-row"><span class="chemical-symbol">${entry.element}</span>${entry.index ? `<sub>${entry.index}</sub>` : ''}</span></span>`; }).join('')}</span>`).join(''); return `<div class="chemical-equation">${renderSide('left')}<span class="fixed-operator">→</span>${renderSide('right')}</div>`; }
   function inputHtml(subtask, id, label, cls) { return `<input class="${cls} ${resultClass(subtask.id, id)}" value="${valueFor(id)}" data-input="${id}" aria-label="${label}" />`; }
@@ -1616,8 +4347,8 @@ const klausurTaskMeta = {
   function findSubtask(id) { return klausurTasks.flatMap(t => t.subtasks).find(s => s.id === id); }
   function checkDirect(subtask) { const results = {}; if (subtask.type === 'oxidationNumberReaction') ['left', 'right'].forEach(side => subtask.reaction[side].forEach((p, pi) => p.formula.forEach((e, ei) => { const id = fieldId(subtask.id, 'ox', side, pi, ei); results[id] = isAccepted(valueFor(id), e.oxidationNumber, 'oxidationNumber'); }))); if (subtask.type === 'redoxEquationScaffold') subtask.scaffold.equations.forEach((eq, eqi) => eq.parts.forEach((part, pi) => { if (part.type === 'particle') { const cid = fieldId(subtask.id, 'scaffold', eqi, pi, 'coefficient'); results[cid] = isAccepted(valueFor(cid), part.coefficient, 'number'); part.formula.forEach((e, fi) => { const eid = fieldId(subtask.id, 'scaffold', eqi, pi, fi, 'element'); const iid = fieldId(subtask.id, 'scaffold', eqi, pi, fi, 'index'); const chid = fieldId(subtask.id, 'scaffold', eqi, pi, fi, 'charge'); results[eid] = isAccepted(valueFor(eid), e.element, 'element'); results[iid] = isAccepted(valueFor(iid), e.index, 'number'); results[chid] = isAccepted(valueFor(chid), e.charge, 'charge'); }); } if (part.type === 'electron') { const cid = fieldId(subtask.id, 'scaffold', eqi, pi, 'electronCoefficient'); results[cid] = isAccepted(valueFor(cid), part.coefficient, 'number'); if (part.charge) { const chid = fieldId(subtask.id, 'scaffold', eqi, pi, 'electronCharge'); results[chid] = isAccepted(valueFor(chid), part.charge, 'charge'); } } })); if (subtask.type === 'choiceGroup') Object.keys(subtask.choices).forEach(g => { const id = fieldId(subtask.id, g); results[id] = valueFor(id) === subtask.correctValues[g]; }); if (subtask.type === 'multiSelect') { const correct = new Set(subtask.correctAnswers); subtask.options.forEach(o => { const id = fieldId(subtask.id, o); results[id] = Boolean(state.inputs[id]) === correct.has(o); }); } if (subtask.type === 'calculation') subtask.fields.forEach(f => { const id = fieldId(subtask.id, f.id); const v = Number(String(valueFor(id)).replace(',', '.')); results[id] = Math.abs(v - f.correctValue) <= (subtask.tolerance || 0); }); if (subtask.type === 'structuredFields') subtask.fields.forEach(f => { const id = fieldId(subtask.id, f.id); results[id] = f.correctValues.some(c => normalizePlain(valueFor(id)).replace(/\s/g, '') === normalizePlain(c).replace(/\s/g, '')); }); state.directResults[subtask.id] = results; }
   function checkCriteria(subtask) { const answer = valueFor(fieldId(subtask.id, 'text')); state.criteriaVisible[subtask.id] = true; state.criteriaResults[subtask.id] = subtask.criteria.map(c => criterionMatches(c, answer)); }
-  function bindEvents() { document.querySelectorAll('[data-nav]').forEach(b => b.addEventListener('click', () => navigate(b.dataset.nav))); document.querySelectorAll('[data-open-klausur-task]').forEach(b => b.addEventListener('click', () => { state.selectedTaskId = b.dataset.openKlausurTask; render(); })); document.querySelectorAll('[data-module]').forEach(b => b.addEventListener('click', () => { const module = modules.find(m => m.id === b.dataset.module); if (module.href) window.location.href = module.href; else if (module.status === 'active') navigate(module.target); else { state.notice = 'Dieses Modul wird später ergänzt.'; render(); } })); document.querySelectorAll('[data-self-check]').forEach(cb => cb.addEventListener('change', () => { let checked = {}; try { checked = JSON.parse(localStorage.getItem(selfCheckStorageKey) || '{}'); } catch {} checked[cb.dataset.selfCheck] = cb.checked; localStorage.setItem(selfCheckStorageKey, JSON.stringify(checked)); })); document.querySelectorAll('[data-print]').forEach(b => b.addEventListener('click', () => window.print())); document.querySelectorAll('[data-input]').forEach(input => input.addEventListener('input', () => { state.inputs[input.dataset.input] = input.type === 'checkbox' ? input.checked : input.value; const subtask = findSubtask(input.dataset.input.split('__')[0]); if (subtask && state.criteriaVisible[subtask.id]) { checkCriteria(subtask); render(); } })); document.querySelectorAll('[data-check-direct]').forEach(b => b.addEventListener('click', () => { const subtask = findSubtask(b.dataset.checkDirect); if (subtask) { checkDirect(subtask); render(); } })); document.querySelectorAll('[data-check-criteria]').forEach(b => b.addEventListener('click', () => { const subtask = findSubtask(b.dataset.checkCriteria); if (subtask) { checkCriteria(subtask); render(); } })); document.querySelectorAll('[data-solution]').forEach(b => b.addEventListener('click', () => { state.solutions[b.dataset.solution] = !state.solutions[b.dataset.solution]; render(); })); }
-  function render() { const root = document.getElementById('root'); root.className = 'app-shell'; const page = state.view === 'selfCheck' ? renderSelfCheck() : state.view === 'klausurTasks' ? renderKlausurTasks() : state.view === 'redoxOverview' ? renderOverview() : renderHome(); root.innerHTML = `<main class="page-wrap">${page}</main>`; bindEvents(); }
+  function bindEvents() { document.querySelectorAll('[data-nav]').forEach(b => b.addEventListener('click', () => { if (b.dataset.nav === 'electrodePracticeOverview') { state.view = 'electrodePotentials'; state.electrodeView = 'electrodePotentialPracticeOverview'; render(); } else navigate(b.dataset.nav); })); document.querySelectorAll('[data-open-electrode-view]').forEach(b => b.addEventListener('click', () => { state.electrodeView = b.dataset.openElectrodeView; state.selectedElectrodeExerciseId = null; render(); })); document.querySelectorAll('[data-open-electrode-exercise]').forEach(b => b.addEventListener('click', () => { state.electrodeView = 'exercise'; state.selectedElectrodeExerciseId = b.dataset.openElectrodeExercise; render(); })); document.querySelectorAll('[data-electrode-half]').forEach(select => select.addEventListener('change', () => { if (select.dataset.electrodeHalf === 'a') state.electrodeHalfCellA = select.value; else state.electrodeHalfCellB = select.value; render(); })); document.querySelectorAll('[data-electrode-she]').forEach(select => select.addEventListener('change', () => { state.electrodeSheCellId = select.value; render(); })); document.querySelectorAll('[data-electrode-input]').forEach(input => input.addEventListener('input', () => { state.inputs[input.dataset.input] = input.value; if (Object.values(state.electrodeCriteriaVisible).some(Boolean)) render(); })); document.querySelectorAll('[data-check-electrode]').forEach(b => b.addEventListener('click', () => { const exercise = findElectrodeExercise(b.dataset.checkElectrode); if (exercise) { checkElectrodeExercise(exercise); render(); } })); document.querySelectorAll('[data-check-electrode-case]').forEach(b => b.addEventListener('click', () => { const exercise = findElectrodeExercise('practice-spontaneity'); if (exercise) { checkElectrodeCase(exercise, b.dataset.checkElectrodeCase); render(); } })); document.querySelectorAll('[data-check-electrode-criteria]').forEach(b => b.addEventListener('click', () => { state.electrodeCriteriaVisible[b.dataset.checkElectrodeCriteria] = true; render(); })); document.querySelectorAll('[data-open-klausur-task]').forEach(b => b.addEventListener('click', () => { state.selectedTaskId = b.dataset.openKlausurTask; render(); })); document.querySelectorAll('[data-module]').forEach(b => b.addEventListener('click', () => { const module = modules.find(m => m.id === b.dataset.module); if (module.href) window.location.href = module.href; else if (module.status === 'active') navigate(module.target); else { state.notice = 'Dieses Modul wird später ergänzt.'; render(); } })); document.querySelectorAll('[data-self-check]').forEach(cb => cb.addEventListener('change', () => { let checked = {}; try { checked = JSON.parse(localStorage.getItem(selfCheckStorageKey) || '{}'); } catch {} checked[cb.dataset.selfCheck] = cb.checked; localStorage.setItem(selfCheckStorageKey, JSON.stringify(checked)); })); document.querySelectorAll('[data-print]').forEach(b => b.addEventListener('click', () => window.print())); document.querySelectorAll('[data-input]').forEach(input => input.addEventListener('input', () => { state.inputs[input.dataset.input] = input.type === 'checkbox' ? input.checked : input.value; const subtask = findSubtask(input.dataset.input.split('__')[0]); if (subtask && state.criteriaVisible[subtask.id]) { checkCriteria(subtask); render(); } })); document.querySelectorAll('[data-check-direct]').forEach(b => b.addEventListener('click', () => { const subtask = findSubtask(b.dataset.checkDirect); if (subtask) { checkDirect(subtask); render(); } })); document.querySelectorAll('[data-check-criteria]').forEach(b => b.addEventListener('click', () => { const subtask = findSubtask(b.dataset.checkCriteria); if (subtask) { checkCriteria(subtask); render(); } })); document.querySelectorAll('[data-solution]').forEach(b => b.addEventListener('click', () => { state.solutions[b.dataset.solution] = !state.solutions[b.dataset.solution]; render(); })); }
+  function render() { const root = document.getElementById('root'); root.className = 'app-shell'; const page = state.view === 'selfCheck' ? renderSelfCheck() : state.view === 'klausurTasks' ? renderKlausurTasks() : state.view === 'electrodePotentials' ? renderElectrodePotentials() : state.view === 'redoxOverview' ? renderOverview() : renderHome(); root.innerHTML = `<main class="page-wrap">${page}</main>`; bindEvents(); }
   render();
 
 })();

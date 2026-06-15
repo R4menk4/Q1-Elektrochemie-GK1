@@ -8,11 +8,17 @@ import RedoxMediumPracticePage from './pages/RedoxMediumPracticePage.jsx';
 import RedoxHardPracticePage from './pages/RedoxHardPracticePage.jsx';
 import SelfCheckPage from './pages/SelfCheckPage.jsx';
 import KlausurTasksPage from './pages/KlausurTasksPage.jsx';
+import ElectrodePotentialModule from './components/ElectrodePotentialModule.jsx';
+
+function ElectrodePotentialPage({ navigate }) {
+  return <ElectrodePotentialModule onBackToHome={() => navigate('home')} />;
+}
 
 const views = {
   home: HomePage,
   selfCheck: SelfCheckPage,
   klausurTasks: KlausurTasksPage,
+  electrodePotentials: ElectrodePotentialPage,
   redoxOverview: RedoxOverviewPage,
   redoxExplanation: RedoxExplanationPage,
   redoxPractice: RedoxEasyPracticePage,

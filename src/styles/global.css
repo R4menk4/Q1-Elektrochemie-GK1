@@ -1095,6 +1095,408 @@ button:disabled {
   margin: 44px auto 0;
 }
 
+.module-page {
+  display: grid;
+  gap: 24px;
+}
+
+.module-page-header {
+  display: grid;
+  gap: 12px;
+  margin: 20px 0 4px;
+}
+
+.module-page-header h1 {
+  margin: 0;
+}
+
+.module-subtitle {
+  max-width: 860px;
+  color: var(--muted);
+  font-size: 1.08rem;
+}
+
+.module-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 18px;
+}
+
+.module-card {
+  display: grid;
+  gap: 12px;
+  min-height: 230px;
+  padding: 22px;
+  text-align: left;
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+}
+
+.module-card:hover {
+  border-color: #9bb7aa;
+  transform: translateY(-1px);
+}
+
+.module-card h2,
+.module-card p {
+  margin: 0;
+}
+
+.module-card p {
+  color: var(--muted);
+}
+
+.module-card-icon {
+  width: 48px;
+  height: 48px;
+  display: inline-grid;
+  place-items: center;
+  border-radius: var(--radius);
+  background: #eef6f1;
+  font-size: 1.45rem;
+}
+
+.module-card-action {
+  align-self: end;
+  color: var(--primary);
+  font-weight: 800;
+}
+
+.operator-chips,
+.label-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.operator-chip,
+.label-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 4px 9px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #f7faf8;
+  color: #405049;
+  font-size: 0.88rem;
+  font-weight: 800;
+}
+
+.operator-chip.afb-ii {
+  border-color: #adc5b9;
+  background: #edf6f1;
+}
+
+.operator-chip.afb-iii {
+  border-color: #c5b487;
+  background: #fff7df;
+  color: #6e5313;
+}
+
+.materials,
+.info-sections,
+.exercise-content {
+  display: grid;
+  gap: 18px;
+}
+
+.material-block,
+.info-section,
+.interactive-box,
+.task-box,
+.result-box,
+.example-box,
+.key-idea,
+.formula-box,
+.criteria-box,
+.model-answer {
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.task-box--inner {
+  margin-top: 16px;
+  background: #f8fbf9;
+  box-shadow: none;
+}
+
+.task-box--inner h3 {
+  margin-bottom: 12px;
+}
+
+.interactive-box,
+.key-idea {
+  background: #f7fbf8;
+}
+
+.formula-box {
+  color: #102219;
+  font-weight: 900;
+  font-size: 1.18rem;
+}
+
+.table-scroll {
+  overflow-x: auto;
+}
+
+.material-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 520px;
+}
+
+.material-table th,
+.material-table td {
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+
+.material-table th {
+  background: #eef5f1;
+}
+
+.selector-row,
+.calculation-grid,
+.structured-field-grid,
+.matching-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.matching-row,
+.single-select,
+.task-box label {
+  display: grid;
+  gap: 8px;
+}
+
+.small-answer-input,
+.equation-input,
+.free-text-area,
+.single-select select,
+.task-box input {
+  min-height: 46px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: #ffffff;
+  color: var(--text);
+}
+
+.free-text-area {
+  width: 100%;
+  min-height: 140px;
+  resize: vertical;
+}
+
+.hint-text {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.she-simulation {
+  display: grid;
+  gap: 18px;
+}
+
+.she-visual {
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) minmax(150px, 0.7fr) minmax(180px, 1fr);
+  gap: 14px;
+  align-items: stretch;
+}
+
+.half-cell-card,
+.voltmeter-card {
+  display: grid;
+  gap: 10px;
+  place-items: center;
+  min-height: 170px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: #ffffff;
+  text-align: center;
+}
+
+.large-symbol {
+  font-size: 2rem;
+  font-weight: 900;
+}
+
+.bubble-row,
+.electron-arrow,
+.equation-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.electron-arrow {
+  justify-content: center;
+  color: var(--accent);
+  font-weight: 900;
+}
+
+.explanation-list {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.equation-scaffold-list {
+  display: grid;
+  gap: 16px;
+}
+
+.equation-row {
+  display: grid;
+  gap: 8px;
+}
+
+.equation-particle,
+.equation-electron {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.equation-particle {
+  padding: 8px 0;
+}
+
+.formula-unit {
+  display: inline-grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: 24px 46px 24px;
+  align-items: center;
+  column-gap: 3px;
+  margin-inline: 1px;
+}
+
+.formula-unit > .equation-input {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.formula-unit > sup,
+.formula-unit > sub {
+  display: inline-flex;
+  line-height: 1;
+}
+
+.formula-unit > sup {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: end;
+}
+
+.formula-unit > sub {
+  grid-column: 2;
+  grid-row: 3;
+  align-self: start;
+}
+
+.equation-electron {
+  display: inline-grid;
+  grid-template-columns: auto auto auto;
+  grid-template-rows: 24px 46px;
+  align-items: center;
+  column-gap: 4px;
+}
+
+.equation-electron > .equation-input {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.equation-electron > span {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+.equation-electron > sup {
+  grid-column: 3;
+  grid-row: 1;
+  align-self: end;
+  line-height: 1;
+}
+
+.equation-input {
+  width: 54px;
+  min-height: 44px;
+  padding: 7px 8px;
+  text-align: center;
+}
+
+.equation-input[aria-label*="Elementsymbol"] {
+  width: 66px;
+}
+
+.equation-input[aria-label*="Index"] {
+  width: 38px;
+  min-height: 32px;
+  padding: 4px 6px;
+  font-size: 0.9rem;
+}
+
+.equation-input[aria-label*="Ladung"],
+.equation-input[aria-label*="Elektronenladung"] {
+  width: 44px;
+  min-height: 32px;
+  padding: 4px 6px;
+  font-size: 0.9rem;
+}
+
+.equation-symbol {
+  font-weight: 900;
+  font-size: 1.35rem;
+}
+
+.expected-display {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.criteria-box ul {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.criteria-box li {
+  padding: 9px 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+
+.criterion-met {
+  background: var(--success-bg);
+  border-color: #69b987 !important;
+}
+
+.criterion-open {
+  background: #fffdf7;
+}
+
+.model-answer-wrapper {
+  display: grid;
+  gap: 12px;
+}
+
 @media (max-width: 720px) {
   .page-wrap {
     width: min(100% - 22px, 1120px);
@@ -1163,6 +1565,15 @@ button:disabled {
 
   .particle-input {
     grid-template-columns: minmax(44px, 3ch) minmax(60px, 7ch) minmax(42px, 3.5ch);
+  }
+
+  .module-card-grid,
+  .she-visual {
+    grid-template-columns: 1fr;
+  }
+
+  .module-card {
+    min-height: 190px;
   }
 }
 

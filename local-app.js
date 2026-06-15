@@ -4268,7 +4268,7 @@ const klausurTaskMeta = {
   ]
 };
 
-  const state = { view: 'home', notice: '', selectedTaskId: null, electrodeView: 'overview', selectedElectrodeExerciseId: null, electrodeHalfCellA: null, electrodeHalfCellB: null, electrodeSheCellId: null, inputs: {}, directResults: {}, electrodeResults: {}, criteriaVisible: {}, criteriaResults: {}, electrodeCriteriaVisible: {}, solutions: {} };
+  const state = { view: 'home', notice: '', selectedTaskId: null, electrodeView: 'overview', selectedElectrodeExerciseId: null, electrodeHalfCellA: null, electrodeHalfCellB: null, electrodeSheCellId: null, inputs: {}, directResults: {}, electrodeResults: {}, redoxResults: {}, criteriaVisible: {}, criteriaResults: {}, electrodeCriteriaVisible: {}, solutions: {}, redoxData: null, redoxDataError: '' };
   const selfCheckStorageKey = 'electrochemistry-self-check';
 
   function pageHeader(title, subtitle) {
@@ -4303,7 +4303,119 @@ const klausurTaskMeta = {
     return `${pageHeader('Elektrochemie Lernprogramm', 'Interaktive Übungen und Erklärungen zur Elektrochemie')}${state.notice ? `<div class="notice" role="status">${state.notice}</div>` : ''}<div class="tile-grid"><button type="button" class="tile-card tile-card--featured" data-nav="selfCheck"><span class="tile-card__title">Selbstcheck</span><span class="tile-card__description">Kompetenzen abhaken und den eigenen Lernstand festhalten.</span><span class="tile-card__badge">Neu</span></button><button type="button" class="tile-card" data-nav="klausurTasks"><span class="tile-card__title">Klausurähnliche Aufgaben – Grundlagen</span><span class="tile-card__description">Aufgaben zu Oxidationszahlen, Redoxreihe, galvanischer Zelle und Zellspannung.</span><span class="tile-card__badge">Neu</span></button>${modules.map(module => `<button type="button" class="tile-card ${module.status !== 'active' ? 'is-disabled' : ''}" data-module="${module.id}"><span class="tile-card__title">${module.title}</span><span class="tile-card__description">${module.description}</span>${module.status !== 'active' ? '<span class="tile-card__badge">Kommt später</span>' : ''}</button>`).join('')}</div>`;
   }
   function renderSelfCheck() { let checked = {}; try { checked = JSON.parse(localStorage.getItem(selfCheckStorageKey) || '{}'); } catch {} return `<div class="self-check-actions no-print">${backButton('Zurück zur Startseite', 'home')}<button type="button" class="primary-button" data-print>Selbstcheck drucken / als PDF speichern</button></div>${pageHeader('Selbstcheck', 'Hake ab, welche Kompetenzen du schon sicher beherrschst.')}<div class="self-check-list">${selfCheckCompetencies.map((cat, ci) => `<section class="self-check-category"><h2>${cat.category}</h2><div class="self-check-items">${cat.items.map((item, ii) => { const id = `${ci}-${ii}`; return `<label class="self-check-item"><input type="checkbox" data-self-check="${id}" ${checked[id] ? 'checked' : ''} /><span>${item}</span></label>`; }).join('')}</div></section>`).join('')}</div>`; }
-  function renderOverview() { return `${backButton('Zur Startseite', 'home')}${pageHeader('Redoxreaktionen aufstellen', 'Dieses Modul steht in der lokalen Einzeldatei als Übersicht bereit. Für die interaktiven Übungen bitte die Projektversion starten.')}`; }
+  let redoxDataLoadStarted = false;
+  function loadRedoxData() {
+    if (state.redoxData || redoxDataLoadStarted) return;
+    redoxDataLoadStarted = true;
+    Promise.all([
+      import('./src/data/redoxExercises.js'),
+      import('./src/data/redoxMediumExercises.js'),
+      import('./src/data/redoxHardExercises.js'),
+    ]).then(([easy, medium, hard]) => {
+      state.redoxData = repairRedoxData({
+        easy: (easy.redoxExercises || []).filter(item => item.level === 'einfach'),
+        medium: medium.redoxMediumExercises || [],
+        hard: hard.redoxHardExercises || [],
+      });
+      state.redoxDataError = '';
+      render();
+    }).catch(() => {
+      state.redoxData = fallbackRedoxData();
+      state.redoxDataError = '';
+      render();
+    });
+  }
+  function repairImportedText(value) {
+    if (typeof value !== 'string' || !/[Ãâ]/.test(value)) return value;
+    try {
+      const bytes = Uint8Array.from(value, char => char.charCodeAt(0) & 255);
+      return new TextDecoder('utf-8').decode(bytes);
+    } catch {
+      return value;
+    }
+  }
+  function repairRedoxData(value) {
+    if (Array.isArray(value)) return value.map(repairRedoxData);
+    if (value && typeof value === 'object') return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, repairRedoxData(item)]));
+    return repairImportedText(value);
+  }
+  function fallbackRedoxData() {
+    return {
+      easy: [
+        { id: 'redox-local-easy-1', type: 'gesamtreaktion', title: 'Gesamtreaktion aufstellen', givenForms: [{ element: 'Zn', reducedForm: 'Zn', oxidizedForm: 'Zn²⁺' }, { element: 'Cu', reducedForm: 'Cu', oxidizedForm: 'Cu²⁺' }], prompt: 'Stelle die Gesamtreaktion auf.', answer: 'Zn + Cu²⁺ → Zn²⁺ + Cu', acceptedAnswers: ['Zn + Cu2+ -> Zn2+ + Cu'], explanation: 'Zink gibt zwei Elektronen ab. Cu²⁺ nimmt zwei Elektronen auf.' },
+        { id: 'redox-local-easy-2', type: 'oxidation', title: 'Oxidation formulieren', givenForms: [{ element: 'Al', reducedForm: 'Al', oxidizedForm: 'Al³⁺' }], prompt: 'Formuliere die Oxidation.', answer: 'Al → Al³⁺ + 3 e⁻', acceptedAnswers: ['Al -> Al3+ + 3 e-'], explanation: 'Aluminium gibt drei Elektronen ab.' },
+        { id: 'redox-local-easy-3', type: 'reduktion', title: 'Reduktion formulieren', givenForms: [{ element: 'Ag', reducedForm: 'Ag', oxidizedForm: 'Ag⁺' }], prompt: 'Formuliere die Reduktion.', answer: 'Ag⁺ + e⁻ → Ag', acceptedAnswers: ['Ag+ + e- -> Ag'], explanation: 'Ein Silber-Ion nimmt ein Elektron auf.' },
+      ],
+      medium: [
+        { id: 'redox-local-medium-1', type: 'gesamtreaktion', title: 'Gesamtreaktion mit Eisen(II) und Chlor', givenForms: [{ element: 'Eisen', reducedForm: 'Fe²⁺', oxidizedForm: 'Fe³⁺' }, { element: 'Chlor', reducedForm: 'Cl⁻', oxidizedForm: 'Cl₂' }], prompt: 'Stelle die Gesamtreaktion auf.', answer: '2 Fe²⁺ + Cl₂ → 2 Fe³⁺ + 2 Cl⁻', acceptedAnswers: ['2 Fe2+ + Cl2 -> 2 Fe3+ + 2 Cl-'], explanation: 'Zwei Fe²⁺-Ionen geben insgesamt zwei Elektronen ab. Cl₂ nimmt zwei Elektronen auf.' },
+        { id: 'redox-local-medium-2', type: 'oxidation', title: 'Oxidation von Bromid zu Brom', givenForms: [{ element: 'Brom', reducedForm: 'Br⁻', oxidizedForm: 'Br₂' }], prompt: 'Formuliere die Oxidation.', answer: '2 Br⁻ → Br₂ + 2 e⁻', acceptedAnswers: ['2 Br- -> Br2 + 2 e-'], explanation: 'Zwei Bromid-Ionen geben zusammen zwei Elektronen ab.' },
+      ],
+      hard: [
+        { id: 'redox-local-hard-1', type: 'gesamtreaktion', title: 'Permanganat und Eisen(II) in saurer Lösung', givenForms: [{ element: 'Mangan', reducedForm: 'Mn²⁺', oxidizedForm: 'MnO₄⁻' }, { element: 'Eisen', reducedForm: 'Fe²⁺', oxidizedForm: 'Fe³⁺' }], medium: 'sauer', helperSpecies: ['H⁺', 'H₂O'], helperHint: 'In saurer Lösung darfst du O-Atome mit H₂O und H-Atome mit H⁺ ausgleichen.', prompt: 'Stelle die Gesamtreaktion in saurer Lösung auf.', answer: 'MnO₄⁻ + 8 H⁺ + 5 Fe²⁺ → Mn²⁺ + 4 H₂O + 5 Fe³⁺', acceptedAnswers: ['MnO4- + 8 H+ + 5 Fe2+ -> Mn2+ + 4 H2O + 5 Fe3+'], explanation: 'Permanganat wird in saurer Lösung zu Mn²⁺ reduziert. Fe²⁺ wird zu Fe³⁺ oxidiert.' },
+      ],
+    };
+  }
+  function redoxTiles() {
+    const tiles = [
+      ['redoxExplanation', 'Redoxreaktionen aufstellen – Erläuterung', 'Schritt für Schritt am Beispiel Zink und Kupfer-Ionen.'],
+      ['redoxPractice', 'Redoxreaktionen aufstellen – einfach', 'Übe mit einfachen Metallatomen und Metallionen.'],
+      ['redoxMediumPractice', 'Redoxreaktionen aufstellen – mittel', 'Übe mit Ionen, Nichtmetallen, Molekülen und Elektronenausgleich.'],
+      ['redoxHardPractice', 'Redoxreaktionen aufstellen – schwer', 'Übe anspruchsvolle Redoxgleichungen in saurer Lösung.'],
+    ];
+    return `<div class="tile-grid">${tiles.map(([view, title, description]) => `<button type="button" class="tile-card" data-nav="${view}"><span class="tile-card__title">${title}</span><span class="tile-card__description">${description}</span></button>`).join('')}</div>`;
+  }
+  function renderOverview() {
+    return `${backButton('Zur Startseite', 'home')}${pageHeader('Redoxreaktionen aufstellen', 'In diesem Modul lernst du, Redoxreaktionen aus reduzierten und oxidierten Formen aufzustellen. Du übst Oxidation, Reduktion, Elektronenanzahl und Gesamtreaktion.')}${redoxTiles()}`;
+  }
+  function renderRedoxExplanation() {
+    const steps = [
+      ['Schritt 1: Gegebene Formen betrachten', `Zuerst vergleichst du reduzierte und oxidierte Form. Bei Zink ist ${formula('Zn')} die reduzierte Form und ${formula('Zn²⁺')} die oxidierte Form. Bei Kupfer ist ${formula('Cu')} reduziert und ${formula('Cu²⁺')} oxidiert.`],
+      ['Schritt 2: Oxidation erkennen', `Bei der Oxidation werden Elektronen abgegeben.${formula('Zn → Zn²⁺ + 2 e⁻', true)}`],
+      ['Schritt 3: Reduktion erkennen', `Bei der Reduktion werden Elektronen aufgenommen.${formula('Cu²⁺ + 2 e⁻ → Cu', true)}`],
+      ['Schritt 4: Elektronenanzahl prüfen', 'Oxidation und Reduktion müssen gleich viele Elektronen enthalten. Hier werden 2 Elektronen abgegeben und 2 Elektronen aufgenommen.'],
+      ['Schritt 5: Gesamtreaktion bilden', `Die Elektronen werden gekürzt. In der Gesamtreaktion tauchen sie nicht mehr auf.${formula('Zn + Cu²⁺ → Zn²⁺ + Cu', true)}`],
+      ['Schritt 6: Fachliche Deutung', `Zink wird oxidiert und ist das Reduktionsmittel. ${formula('Cu²⁺')} wird reduziert und ist das Oxidationsmittel.`],
+    ];
+    return `${backButton('Zur Modulübersicht', 'redoxOverview')}${pageHeader('Redoxreaktionen aufstellen – Erläuterung', 'Ein Beispiel mit Zink und Kupfer-Ionen.')}<section class="given-forms"><h2>Gegebene Formen</h2><div class="given-forms__grid"><div><strong>Zink</strong>${formula('Zn / Zn²⁺', true)}</div><div><strong>Kupfer</strong>${formula('Cu / Cu²⁺', true)}</div></div></section><div class="task-list">${steps.map(([title, body], index) => `<section class="task-box"><p class="eyebrow">Schritt ${index + 1}</p><h2>${title}</h2><p>${body}</p></section>`).join('')}</div><section class="solution-card"><h2>Fertige Lösung</h2><p>Oxidation:</p>${formula('Zn → Zn²⁺ + 2 e⁻', true)}<p>Reduktion:</p>${formula('Cu²⁺ + 2 e⁻ → Cu', true)}<p>Gesamtreaktion:</p>${formula('Zn + Cu²⁺ → Zn²⁺ + Cu', true)}</section><aside class="memory-card"><h2>Merke</h2><p>Oxidation: Elektronen stehen auf der Produktseite.</p><p>Reduktion: Elektronen stehen auf der Eduktseite.</p><p>In der Gesamtreaktion dürfen keine Elektronen mehr vorkommen.</p></aside>`;
+  }
+  function redoxLevelConfig(view) {
+    if (view === 'redoxMediumPractice') return { key: 'medium', title: 'Redoxreaktionen aufstellen – mittel', subtitle: 'Übe mit Ionen, Nichtmetallen, Molekülen und Elektronenausgleich.' };
+    if (view === 'redoxHardPractice') return { key: 'hard', title: 'Redoxreaktionen aufstellen – schwer', subtitle: 'Übe anspruchsvolle Redoxgleichungen in saurer Lösung.' };
+    return { key: 'easy', title: 'Redoxreaktionen aufstellen – einfach', subtitle: 'Übe mit einfachen Metallatomen und Metallionen.' };
+  }
+  function normalizeRedoxAnswer(value) {
+    return normalizeUnicode(value).toLowerCase().replace(/²/g, '2').replace(/³/g, '3').replace(/⁺/g, '+').replace(/⁻/g, '-').replace(/₁/g, '1').replace(/₂/g, '2').replace(/₃/g, '3').replace(/₄/g, '4').replace(/₇/g, '7').replace(/\s+/g, '').replace(/→/g, '->');
+  }
+  function redoxAnswerMatches(exercise, value) {
+    const accepted = [exercise.answer, ...(exercise.acceptedAnswers || [])].filter(Boolean);
+    const normalized = normalizeRedoxAnswer(value);
+    return accepted.some(answer => normalizeRedoxAnswer(answer) === normalized);
+  }
+  function renderRedoxGivenForms(forms = []) {
+    if (!forms.length) return '';
+    return `<section class="given-forms"><h3>Gegebene Formen</h3><div class="given-forms__grid">${forms.map(form => `<div><strong>${form.element}</strong><p>reduziert: ${formula(form.reducedForm)}</p><p>oxidiert: ${formula(form.oxidizedForm)}</p></div>`).join('')}</div></section>`;
+  }
+  function renderRedoxExercise(exercise, index) {
+    const id = fieldId('redox', exercise.id);
+    const result = state.redoxResults[exercise.id];
+    const resultClassName = result === undefined ? '' : result ? 'is-correct' : 'is-wrong';
+    const solutionVisible = state.solutions[exercise.id];
+    const inputValue = valueFor(id);
+    const partials = exercise.partialReactions ? `<section class="partial-reactions"><h3>Vorgegebene Teilreaktionen</h3><p>Oxidation:</p>${formula(exercise.partialReactions.oxidation, true)}<p>Reduktion:</p>${formula(exercise.partialReactions.reduction, true)}</section>` : '';
+    const helper = (exercise.medium || exercise.helperSpecies) ? `<section class="helper-card">${exercise.medium ? '<p><strong>Reaktionsmedium:</strong> saure Lösung</p>' : ''}${exercise.helperSpecies ? `<p><strong>Hilfsstoffe:</strong> ${exercise.helperSpecies.map(item => formula(item)).join(' ')}</p>` : ''}${exercise.helperHint ? `<p>${exercise.helperHint}</p>` : ''}</section>` : '';
+    const answerInput = exercise.type === 'zuordnung'
+      ? `<div class="pair-task">${(exercise.pairs || []).map((pair, pairIndex) => { const pairId = fieldId('redox', exercise.id, pairIndex); return `<div class="pair-row">${formula(pair.equation, true)}<select class="${state.redoxResults[pairId] === undefined ? '' : state.redoxResults[pairId] ? 'is-correct' : 'is-wrong'}" data-input="${pairId}"><option value="">Bitte wählen</option><option value="Oxidation" ${valueFor(pairId) === 'Oxidation' ? 'selected' : ''}>Oxidation</option><option value="Reduktion" ${valueFor(pairId) === 'Reduktion' ? 'selected' : ''}>Reduktion</option></select></div>`; }).join('')}</div>`
+      : `<label class="klausur-field"><span>Deine Antwort</span><input class="${resultClassName}" value="${inputValue}" data-input="${id}" placeholder="${exercise.type === 'elektronenanzahl' ? 'z. B. 2' : 'Reaktionsgleichung eingeben'}" /></label>`;
+    return `<article class="task-box" id="${exercise.id}"><p class="eyebrow">Aufgabe ${index + 1}</p><h2>${exercise.title}</h2><p>${exercise.prompt}</p>${renderRedoxGivenForms(exercise.givenForms)}${helper}${partials}${exercise.template ? `<p><strong>Vorlage:</strong> ${formula(exercise.template)}</p>` : ''}${answerInput}<div class="button-row"><button type="button" class="primary-button" data-check-redox="${exercise.id}">Antwort prüfen</button><button type="button" class="secondary-button" data-solution="${exercise.id}">${solutionVisible ? 'Musterlösung ausblenden' : 'Musterlösung anzeigen'}</button></div>${result !== undefined && exercise.type !== 'zuordnung' ? `<p class="feedback ${result ? 'feedback--success' : 'feedback--error'}">${result ? 'Richtig.' : 'Noch nicht richtig.'}</p>` : ''}${solutionVisible ? `<section class="solution-card solution-card--compact"><h3>Musterlösung</h3>${formula(exercise.answer, true)}<p>${exercise.explanation || ''}</p>${exercise.solutionSteps?.oxidation ? `<p>Oxidation:</p>${formula(exercise.solutionSteps.oxidation, true)}` : ''}${exercise.solutionSteps?.reduction ? `<p>Reduktion:</p>${formula(exercise.solutionSteps.reduction, true)}` : ''}${exercise.solutionSteps?.electronBalance ? `<p><strong>Elektronenausgleich:</strong> ${exercise.solutionSteps.electronBalance}</p>` : ''}</section>` : ''}</article>`;
+  }
+  function renderRedoxPractice(view) {
+    loadRedoxData();
+    const config = redoxLevelConfig(view);
+    if (state.redoxDataError) return `${backButton('Zur Modulübersicht', 'redoxOverview')}${pageHeader(config.title, config.subtitle)}<section class="task-box"><p>${state.redoxDataError}</p><p>Bitte lade die Seite neu oder öffne die Projektversion.</p></section>`;
+    if (!state.redoxData) return `${backButton('Zur Modulübersicht', 'redoxOverview')}${pageHeader(config.title, config.subtitle)}<section class="task-box"><p>Die Übungen werden geladen.</p></section>`;
+    const exercises = state.redoxData[config.key] || [];
+    return `${backButton('Zur Modulübersicht', 'redoxOverview')}${pageHeader(config.title, config.subtitle)}<div class="task-list">${exercises.map(renderRedoxExercise).join('')}</div>`;
+  }
   function formatLocalVoltage(value) { return `${value >= 0 ? '+' : '−'}${Math.abs(value).toFixed(2).replace('.', ',')} V`; }
   function electrodeResultClass(exerciseId, id) { const result = state.electrodeResults[exerciseId]; return !result || !(id in result) ? '' : result[id] ? 'is-correct' : 'is-wrong'; }
   function electrodeFieldId(...parts) { return ['electrode', ...parts].join('__'); }
@@ -4347,8 +4459,21 @@ const klausurTaskMeta = {
   function findSubtask(id) { return klausurTasks.flatMap(t => t.subtasks).find(s => s.id === id); }
   function checkDirect(subtask) { const results = {}; if (subtask.type === 'oxidationNumberReaction') ['left', 'right'].forEach(side => subtask.reaction[side].forEach((p, pi) => p.formula.forEach((e, ei) => { const id = fieldId(subtask.id, 'ox', side, pi, ei); results[id] = isAccepted(valueFor(id), e.oxidationNumber, 'oxidationNumber'); }))); if (subtask.type === 'redoxEquationScaffold') subtask.scaffold.equations.forEach((eq, eqi) => eq.parts.forEach((part, pi) => { if (part.type === 'particle') { const cid = fieldId(subtask.id, 'scaffold', eqi, pi, 'coefficient'); results[cid] = isAccepted(valueFor(cid), part.coefficient, 'number'); part.formula.forEach((e, fi) => { const eid = fieldId(subtask.id, 'scaffold', eqi, pi, fi, 'element'); const iid = fieldId(subtask.id, 'scaffold', eqi, pi, fi, 'index'); const chid = fieldId(subtask.id, 'scaffold', eqi, pi, fi, 'charge'); results[eid] = isAccepted(valueFor(eid), e.element, 'element'); results[iid] = isAccepted(valueFor(iid), e.index, 'number'); results[chid] = isAccepted(valueFor(chid), e.charge, 'charge'); }); } if (part.type === 'electron') { const cid = fieldId(subtask.id, 'scaffold', eqi, pi, 'electronCoefficient'); results[cid] = isAccepted(valueFor(cid), part.coefficient, 'number'); if (part.charge) { const chid = fieldId(subtask.id, 'scaffold', eqi, pi, 'electronCharge'); results[chid] = isAccepted(valueFor(chid), part.charge, 'charge'); } } })); if (subtask.type === 'choiceGroup') Object.keys(subtask.choices).forEach(g => { const id = fieldId(subtask.id, g); results[id] = valueFor(id) === subtask.correctValues[g]; }); if (subtask.type === 'multiSelect') { const correct = new Set(subtask.correctAnswers); subtask.options.forEach(o => { const id = fieldId(subtask.id, o); results[id] = Boolean(state.inputs[id]) === correct.has(o); }); } if (subtask.type === 'calculation') subtask.fields.forEach(f => { const id = fieldId(subtask.id, f.id); const v = Number(String(valueFor(id)).replace(',', '.')); results[id] = Math.abs(v - f.correctValue) <= (subtask.tolerance || 0); }); if (subtask.type === 'structuredFields') subtask.fields.forEach(f => { const id = fieldId(subtask.id, f.id); results[id] = f.correctValues.some(c => normalizePlain(valueFor(id)).replace(/\s/g, '') === normalizePlain(c).replace(/\s/g, '')); }); state.directResults[subtask.id] = results; }
   function checkCriteria(subtask) { const answer = valueFor(fieldId(subtask.id, 'text')); state.criteriaVisible[subtask.id] = true; state.criteriaResults[subtask.id] = subtask.criteria.map(c => criterionMatches(c, answer)); }
-  function bindEvents() { document.querySelectorAll('[data-nav]').forEach(b => b.addEventListener('click', () => { if (b.dataset.nav === 'electrodePracticeOverview') { state.view = 'electrodePotentials'; state.electrodeView = 'electrodePotentialPracticeOverview'; render(); } else navigate(b.dataset.nav); })); document.querySelectorAll('[data-open-electrode-view]').forEach(b => b.addEventListener('click', () => { state.electrodeView = b.dataset.openElectrodeView; state.selectedElectrodeExerciseId = null; render(); })); document.querySelectorAll('[data-open-electrode-exercise]').forEach(b => b.addEventListener('click', () => { state.electrodeView = 'exercise'; state.selectedElectrodeExerciseId = b.dataset.openElectrodeExercise; render(); })); document.querySelectorAll('[data-electrode-half]').forEach(select => select.addEventListener('change', () => { if (select.dataset.electrodeHalf === 'a') state.electrodeHalfCellA = select.value; else state.electrodeHalfCellB = select.value; render(); })); document.querySelectorAll('[data-electrode-she]').forEach(select => select.addEventListener('change', () => { state.electrodeSheCellId = select.value; render(); })); document.querySelectorAll('[data-electrode-input]').forEach(input => input.addEventListener('input', () => { state.inputs[input.dataset.input] = input.value; if (Object.values(state.electrodeCriteriaVisible).some(Boolean)) render(); })); document.querySelectorAll('[data-check-electrode]').forEach(b => b.addEventListener('click', () => { const exercise = findElectrodeExercise(b.dataset.checkElectrode); if (exercise) { checkElectrodeExercise(exercise); render(); } })); document.querySelectorAll('[data-check-electrode-case]').forEach(b => b.addEventListener('click', () => { const exercise = findElectrodeExercise('practice-spontaneity'); if (exercise) { checkElectrodeCase(exercise, b.dataset.checkElectrodeCase); render(); } })); document.querySelectorAll('[data-check-electrode-criteria]').forEach(b => b.addEventListener('click', () => { state.electrodeCriteriaVisible[b.dataset.checkElectrodeCriteria] = true; render(); })); document.querySelectorAll('[data-open-klausur-task]').forEach(b => b.addEventListener('click', () => { state.selectedTaskId = b.dataset.openKlausurTask; render(); })); document.querySelectorAll('[data-module]').forEach(b => b.addEventListener('click', () => { const module = modules.find(m => m.id === b.dataset.module); if (module.href) window.location.href = module.href; else if (module.status === 'active') navigate(module.target); else { state.notice = 'Dieses Modul wird später ergänzt.'; render(); } })); document.querySelectorAll('[data-self-check]').forEach(cb => cb.addEventListener('change', () => { let checked = {}; try { checked = JSON.parse(localStorage.getItem(selfCheckStorageKey) || '{}'); } catch {} checked[cb.dataset.selfCheck] = cb.checked; localStorage.setItem(selfCheckStorageKey, JSON.stringify(checked)); })); document.querySelectorAll('[data-print]').forEach(b => b.addEventListener('click', () => window.print())); document.querySelectorAll('[data-input]').forEach(input => input.addEventListener('input', () => { state.inputs[input.dataset.input] = input.type === 'checkbox' ? input.checked : input.value; const subtask = findSubtask(input.dataset.input.split('__')[0]); if (subtask && state.criteriaVisible[subtask.id]) { checkCriteria(subtask); render(); } })); document.querySelectorAll('[data-check-direct]').forEach(b => b.addEventListener('click', () => { const subtask = findSubtask(b.dataset.checkDirect); if (subtask) { checkDirect(subtask); render(); } })); document.querySelectorAll('[data-check-criteria]').forEach(b => b.addEventListener('click', () => { const subtask = findSubtask(b.dataset.checkCriteria); if (subtask) { checkCriteria(subtask); render(); } })); document.querySelectorAll('[data-solution]').forEach(b => b.addEventListener('click', () => { state.solutions[b.dataset.solution] = !state.solutions[b.dataset.solution]; render(); })); }
-  function render() { const root = document.getElementById('root'); root.className = 'app-shell'; const page = state.view === 'selfCheck' ? renderSelfCheck() : state.view === 'klausurTasks' ? renderKlausurTasks() : state.view === 'electrodePotentials' ? renderElectrodePotentials() : state.view === 'redoxOverview' ? renderOverview() : renderHome(); root.innerHTML = `<main class="page-wrap">${page}</main>`; bindEvents(); }
+  function checkRedoxExercise(exerciseId) {
+    const exercises = Object.values(state.redoxData || {}).flat();
+    const exercise = exercises.find(item => item.id === exerciseId);
+    if (!exercise) return;
+    if (exercise.type === 'zuordnung') {
+      (exercise.pairs || []).forEach((pair, pairIndex) => {
+        const pairId = fieldId('redox', exercise.id, pairIndex);
+        state.redoxResults[pairId] = valueFor(pairId) === pair.correctType;
+      });
+      return;
+    }
+    state.redoxResults[exercise.id] = redoxAnswerMatches(exercise, valueFor(fieldId('redox', exercise.id)));
+  }
+  function bindEvents() { document.querySelectorAll('[data-nav]').forEach(b => b.addEventListener('click', () => { if (b.dataset.nav === 'electrodePracticeOverview') { state.view = 'electrodePotentials'; state.electrodeView = 'electrodePotentialPracticeOverview'; render(); } else navigate(b.dataset.nav); })); document.querySelectorAll('[data-open-electrode-view]').forEach(b => b.addEventListener('click', () => { state.electrodeView = b.dataset.openElectrodeView; state.selectedElectrodeExerciseId = null; render(); })); document.querySelectorAll('[data-open-electrode-exercise]').forEach(b => b.addEventListener('click', () => { state.electrodeView = 'exercise'; state.selectedElectrodeExerciseId = b.dataset.openElectrodeExercise; render(); })); document.querySelectorAll('[data-electrode-half]').forEach(select => select.addEventListener('change', () => { if (select.dataset.electrodeHalf === 'a') state.electrodeHalfCellA = select.value; else state.electrodeHalfCellB = select.value; render(); })); document.querySelectorAll('[data-electrode-she]').forEach(select => select.addEventListener('change', () => { state.electrodeSheCellId = select.value; render(); })); document.querySelectorAll('[data-electrode-input]').forEach(input => input.addEventListener('input', () => { state.inputs[input.dataset.input] = input.value; if (Object.values(state.electrodeCriteriaVisible).some(Boolean)) render(); })); document.querySelectorAll('[data-check-electrode]').forEach(b => b.addEventListener('click', () => { const exercise = findElectrodeExercise(b.dataset.checkElectrode); if (exercise) { checkElectrodeExercise(exercise); render(); } })); document.querySelectorAll('[data-check-electrode-case]').forEach(b => b.addEventListener('click', () => { const exercise = findElectrodeExercise('practice-spontaneity'); if (exercise) { checkElectrodeCase(exercise, b.dataset.checkElectrodeCase); render(); } })); document.querySelectorAll('[data-check-electrode-criteria]').forEach(b => b.addEventListener('click', () => { state.electrodeCriteriaVisible[b.dataset.checkElectrodeCriteria] = true; render(); })); document.querySelectorAll('[data-open-klausur-task]').forEach(b => b.addEventListener('click', () => { state.selectedTaskId = b.dataset.openKlausurTask; render(); })); document.querySelectorAll('[data-module]').forEach(b => b.addEventListener('click', () => { const module = modules.find(m => m.id === b.dataset.module); if (module.href) window.location.href = module.href; else if (module.status === 'active') navigate(module.target); else { state.notice = 'Dieses Modul wird später ergänzt.'; render(); } })); document.querySelectorAll('[data-self-check]').forEach(cb => cb.addEventListener('change', () => { let checked = {}; try { checked = JSON.parse(localStorage.getItem(selfCheckStorageKey) || '{}'); } catch {} checked[cb.dataset.selfCheck] = cb.checked; localStorage.setItem(selfCheckStorageKey, JSON.stringify(checked)); })); document.querySelectorAll('[data-print]').forEach(b => b.addEventListener('click', () => window.print())); document.querySelectorAll('[data-input]').forEach(input => input.addEventListener('input', () => { state.inputs[input.dataset.input] = input.type === 'checkbox' ? input.checked : input.value; const subtask = findSubtask(input.dataset.input.split('__')[0]); if (subtask && state.criteriaVisible[subtask.id]) { checkCriteria(subtask); render(); } })); document.querySelectorAll('[data-check-redox]').forEach(b => b.addEventListener('click', () => { checkRedoxExercise(b.dataset.checkRedox); render(); })); document.querySelectorAll('[data-check-direct]').forEach(b => b.addEventListener('click', () => { const subtask = findSubtask(b.dataset.checkDirect); if (subtask) { checkDirect(subtask); render(); } })); document.querySelectorAll('[data-check-criteria]').forEach(b => b.addEventListener('click', () => { const subtask = findSubtask(b.dataset.checkCriteria); if (subtask) { checkCriteria(subtask); render(); } })); document.querySelectorAll('[data-solution]').forEach(b => b.addEventListener('click', () => { state.solutions[b.dataset.solution] = !state.solutions[b.dataset.solution]; render(); })); }
+  function render() { const root = document.getElementById('root'); root.className = 'app-shell'; const page = state.view === 'selfCheck' ? renderSelfCheck() : state.view === 'klausurTasks' ? renderKlausurTasks() : state.view === 'electrodePotentials' ? renderElectrodePotentials() : state.view === 'redoxOverview' ? renderOverview() : state.view === 'redoxExplanation' ? renderRedoxExplanation() : ['redoxPractice', 'redoxMediumPractice', 'redoxHardPractice'].includes(state.view) ? renderRedoxPractice(state.view) : renderHome(); root.innerHTML = `<main class="page-wrap">${page}</main>`; bindEvents(); }
   render();
 
 })();
